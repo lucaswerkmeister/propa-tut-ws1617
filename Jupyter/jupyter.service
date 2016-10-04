@@ -1,0 +1,14 @@
+[Unit]
+Description=Jupyter / IHaskell system
+
+[Service]
+ExecStart=/usr/bin/jupyter notebook --no-browser --no-mathjax --notebook-dir=/notebooks/ --ip=*
+User=jupyter
+Environment=PATH=/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/home/jupyter/.stack/programs/x86_64-linux/ghc-7.10.3/bin
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=full
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

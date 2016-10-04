@@ -1,0 +1,13 @@
+[Unit]
+Description=Jupyter Notebook storage
+ConditionPathExists=/srv/jupyter.raw
+Before=systemd-nspawn@Jupyter.service
+
+[Mount]
+What=/srv/jupyter.raw
+Where=/srv/jupyter
+Type=btrfs
+Options=loop
+
+[Install]
+WantedBy=systemd-nspawn@Jupyter.service
