@@ -1,0 +1,14 @@
+# doesn't work because Debian builds with --disable-libiptc
+#[Network]
+#Port=8888
+
+[Exec]
+#DropCapability=CAP_NET_ADMIN CAP_NET_BIND_SERVICE # needed to run systemd-networkd in container
+PrivateUsers=no
+
+[Files]
+Bind=/srv/jupyter:/notebooks
+#Volatile=state # clashes with bind mount
+
+[Network]
+#Private=no
