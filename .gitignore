@@ -1,0 +1,14 @@
+# editor files
+*~
+\#*
+
+# LaTeX files
+*.aux
+*.log
+*.nav
+*.snm
+*.toc
+*.vrb
+*.out
+*.pdf
+#!/logos/*.pdf
