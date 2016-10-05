@@ -12,14 +12,16 @@ configured by [`Jupyter.nspawn`](Jupyter.nspawn) in `/etc/systemd/nspawn/`,
 and augmented with [`resource-control.conf`](resource-control.conf) in `/etc/systemd/system/systemd-nspawn@Jupyter.service.d/`.
 
 The container also runs under disk limits, set up with `machinectl set-limit 20G` and `machinectl set-limit Jupyter 15G`.
-The `/srv/jupyter` directory, which is bind-mounted into the container as `/notebooks` and contains all notebooks,
-is a btrfs loop-mounted file system:
+All notebooks live under a btrfs loop-mounted file system:
 ```bash
 dd if=/dev/zero of=/srv/jupyter.raw bs=1M count=1024
 losetup -f /srv/jupyter.raw
 mkfs.btrfs -L Jupyter /dev/loop3
 ```
 It is mounted with [`srv-jupyter.mount`](srv-jupyter.mount).
+It contains a subvolume `/notebooks` for the actual notebooks, which is bind-mounted into the container under `/notebooks`.
+Hourly snapshots of that subvolume are created in a `/.snapshots` subvolume,
+using [`jupyter-notebooks-snapshot.timer`](jupyter-notebooks-snapshot.timer) and [`jupyter-notebooks-snapshot.service`](jupyter-notebooks-snapshot.service).
 
 `systemd-networkd` is running in both host and container,
 creating a veth link per its default configuration.

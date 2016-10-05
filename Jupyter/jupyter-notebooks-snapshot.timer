@@ -1,0 +1,9 @@
+[Unit]
+Description=Create hourly snapshots of /srv/jupyter/notebooks
+
+[Timer]
+OnCalendar=hourly
+AccuracySec=10min
+
+[Install]
+WantedBy=timers.target

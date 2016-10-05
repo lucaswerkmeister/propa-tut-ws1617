@@ -1,0 +1,11 @@
+[Unit]
+Description=Create snapshot of /srv/jupyter/notebooks
+
+[Service]
+ExecStart=/bin/sh -c 'btrfs subvolume snapshot -r /srv/jupyter/notebooks/ /srv/jupyter/.snapshots/$(date -Iseconds)'
+Type=oneshot
+ProtectSystem=full
+ProtectHome=yes
+PrivateNetwork=yes
+PrivateDevices=yes
+PrivateTmp=yes

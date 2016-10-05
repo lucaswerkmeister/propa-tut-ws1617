@@ -7,7 +7,7 @@
 PrivateUsers=no
 
 [Files]
-Bind=/srv/jupyter:/notebooks
+Bind=/srv/jupyter/notebooks:/notebooks
 #Volatile=state # clashes with bind mount
 
 [Network]
