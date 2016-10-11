@@ -2,9 +2,14 @@
 
 Jupyter + IHaskell is running in an Arch Linux `systemd-nspawn` container.
 The container was populated with `pacstrap`.
-IHaskell was built in the container following [these instructions](https://github.com/gibiansky/IHaskell#installing-manually).
+IHaskell was built in the container
+as the user `jupyter` in `~/IHaskell`
+following [these instructions](https://github.com/gibiansky/IHaskell#installing-manually).
 
 Inside the container, Jupyter is running as a systemd service, controlled by the file [`jupyter.service`](jupyter.service).
+The service runs as the `jupyter-run` user, which belongs to the `jupyter` group.
+`jupyter`’s home directory is readable to anyone in this group,
+so that the service can access the IHaskell binaries.
 
 The container also runs as a systemd service.
 The service file is the default `systemd-nspawn@.service` template,
@@ -19,7 +24,8 @@ losetup -f /srv/jupyter.raw
 mkfs.btrfs -L Jupyter /dev/loop3
 ```
 It is mounted with [`srv-jupyter.mount`](srv-jupyter.mount).
-It contains a subvolume `/notebooks` for the actual notebooks, which is bind-mounted into the container under `/notebooks`.
+It contains a subvolume `/notebooks` for the actual notebooks,
+which is bind-mounted into the container under `/notebooks` (and owned by `jupyter-run`).
 Hourly snapshots of that subvolume are created in a `/.snapshots` subvolume,
 using [`jupyter-notebooks-snapshot.timer`](jupyter-notebooks-snapshot.timer) and [`jupyter-notebooks-snapshot.service`](jupyter-notebooks-snapshot.service).
 
