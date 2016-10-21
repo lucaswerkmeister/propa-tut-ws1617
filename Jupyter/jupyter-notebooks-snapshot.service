@@ -1,5 +1,7 @@
 [Unit]
 Description=Create snapshot of /srv/jupyter/notebooks
+Requires=srv-jupyter.mount
+After=srv-jupyter.mount
 
 [Service]
 ExecStart=/bin/sh -c 'btrfs subvolume snapshot -r /srv/jupyter/notebooks/ /srv/jupyter/.snapshots/$(date -Iseconds)'
