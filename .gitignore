@@ -11,4 +11,6 @@
 *.vrb
 *.out
 *.pdf
+*.fdb_latexmk
+*.fls
 #!/logos/*.pdf
