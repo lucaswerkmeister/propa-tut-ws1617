@@ -46,4 +46,34 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{max3}}
+  \begin{itemize}
+  \item \lstinline{if .. then .. else}
+    \pause
+    \begin{lstlisting}
+      max3if x y z = if (x<=y)
+                     then if (y<=z) then z else y
+                     else if (x<=z) then z else x
+    \end{lstlisting}
+    \pause
+  \item \emph{guard}-Notation
+    \pause
+    \begin{lstlisting}
+      max3guard x y z =
+        | x>=y && x>=z = x
+        | y>=x && y>=z = y
+        | otherwise    = z
+    \end{lstlisting}
+    \pause
+  \item \lstinline{max}
+    \pause
+    \begin{lstlisting}
+      max3max x y z = max x (max y z)
+      -- oder
+      max3max x y z = max x $ max y z
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
 \end{document}
