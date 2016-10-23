@@ -11,6 +11,13 @@ The service runs as the `jupyter-run` user, which belongs to the `jupyter` group
 `jupyter`’s home directory is readable to anyone in this group,
 so that the service can access the IHaskell binaries.
 
+Additionally, the following packages were installed by running
+```sh
+cabal --package-db=/home/jupyter/.stack/programs/x86_64-linux/ghc-7.10.3/lib/ghc-7.10.3/package.conf.d install $name
+```
+from the `jupyter` user:
+- QuickCheck
+
 The container also runs as a systemd service.
 The service file is the default `systemd-nspawn@.service` template,
 configured by [`Jupyter.nspawn`](Jupyter.nspawn) in `/etc/systemd/nspawn/`,
