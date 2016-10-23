@@ -127,4 +127,15 @@
   riskiert man damit jedoch nur Fehler.
 \end{frame}
 
+\begin{frame}[fragile]
+  Listen werden mit dem \emph{cons}-Operator \lstinline{:} aufgebaut
+  (\lstinline{[1,2,3]} bedeutet \lstinline{1:2:3:[]})
+  und können so auch mit \emph{Pattern Matching} auseinandergenommen werden:
+  
+  \begin{lstlisting}
+    length [] = 0                 -- Anfangswert
+    length (x:xs) = 1 + length xs -- rekursiver Aufruf
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
