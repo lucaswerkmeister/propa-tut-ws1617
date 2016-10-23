@@ -111,4 +111,20 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Endrekursion}
+  Rekursive Funktionsaufrufe können optimiert werden,
+  wenn die Funktion nach dem rekursiven Aufruf nichts mehr macht,
+  außer das Ergebnis des Aufrufs selbst zurückzugeben.
+  Eine Funktion in dieser Form nennt man \emph{endrekursiv}.
+  
+  Deshalb \emph{kann} es sich für \emph{bestimmte} performanzkritische Funktionen lohnen,
+  sie in endrekursive Form zu bringen,
+  üblicherweise mithilfe von zusätzlichen „Akkumulator“-Parametern.
+  
+  In allen anderen Fällen
+  (etwa in der Klausur, wenn eine endrekursive Form nicht explizit gefordert ist)
+  riskiert man damit jedoch nur Fehler.
+\end{frame}
+
 \end{document}
