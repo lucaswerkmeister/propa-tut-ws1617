@@ -94,4 +94,21 @@
   (Typsignatur auf \lstinline{testMax3} ist nötig, sonst testet QuickCheck mit dem trivialen Typ/Wert \lstinline{()}.)
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{max3}-Test}
+  \lstinline{testMax3} sieht noch etwas unhandlich aus.
+  Mit funktionaler Programmierung geht das besser!
+  \pause
+  \begin{lstlisting}
+    testMax3 max3 x y z = let max = max3 x y z in
+      all (max>=) [x,y,z] &&
+      elem max [x,y,z]
+  \end{lstlisting}
+  \begin{itemize}
+  \item \lstinline{all} prüft, ob ein Prädikat (Funktion von Element auf \lstinline{Bool}) für alle Elemente einer Liste erfüllt ist
+  \item \lstinline{>=} wird unterversorgt, ergibt Funktion, die prüft, ob \lstinline{max} größer oder gleich dem Argument ist
+  \item \lstinline{elem} prüft, ob ein Element in einer Liste enthalten ist
+  \end{itemize}
+\end{frame}
+
 \end{document}
