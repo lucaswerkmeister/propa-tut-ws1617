@@ -76,4 +76,22 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{max3}-Test}
+  \begin{lstlisting}
+    testMax3 :: (Integer -> Integer -> Integer -> Integer) ->
+      Integer -> Integer -> Integer -> Bool
+    testMax3 max3 x y z = let max = max3 x y z in
+      max >= x && max >= y && max >= z &&
+      (max == x || max == y || max == z)
+  \end{lstlisting}
+  \pause
+  Test mit QuickCheck:
+  \begin{lstlisting}
+    import Test.QuickCheck
+    quickCheck (testMax3 max3if)
+  \end{lstlisting}
+  (Typsignatur auf \lstinline{testMax3} ist nötig, sonst testet QuickCheck mit dem trivialen Typ/Wert \lstinline{()}.)
+\end{frame}
+
 \end{document}
