@@ -57,4 +57,20 @@
   \lstinline{pow1} läuft in $\Theta(e)$, \lstinline{pow2} in $\Theta(\log e)$.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{pow3}}
+  Transformieren Sie \lstinline{pow2} in endrekursive Version \lstinline{pow3} (Hilfsfunktion mit Akkumulator).
+  Außerdem: Fehlerbehandlung bei negativem Exponenten mittels \lstinline{error}.
+  \pause
+  \begin{lstlisting}
+    pow3 b e
+      | e < 0     = error "Negativer Exponent"
+      | otherwise = pow3Acc b e 1 where
+          pow3Acc b e acc
+            | e == 0    = acc
+            | even e    = pow3Acc (b*b) (e `div` 2) acc
+            | otherwise = pow3Acc (b*b) (e `div` 2) (b*acc)
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
