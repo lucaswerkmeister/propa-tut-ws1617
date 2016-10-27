@@ -180,4 +180,21 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{isSorted}}
+  Schreiben Sie eine Funktion \lstinline{isSorted}, die testet, um eine Liste von Zahlen aufsteigend sortiert ist.
+  Definieren Sie dann Testfunktionen \lstinline{insertSortIsSorted} und \lstinline{mergeSortIsSorted}.
+  \pause
+  \begin{lstlisting}
+    isSorted [] = True
+    isSorted [x] = True
+    isSorted (x:y:ys) = x <= y && isSorted (y:ys)
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    insertSortIsSorted list = isSorted $ insertSort list
+    mergeSortIsSorted list = isSorted $ mergeSort list
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
