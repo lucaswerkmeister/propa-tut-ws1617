@@ -136,4 +136,21 @@
   Kann man auch in endrekursiver Form schreiben, bringt aber nicht viel.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{insertSort}}
+  Verwenden Sie \lstinline{insert} für Funktion \lstinline{insertSort}, die Liste von ganzen Zahlen sortiert.
+  \pause
+  \begin{lstlisting}
+    insertSort [] = []
+    insertSort (x:xs) = insert x (insertSort xs)
+  \end{lstlisting}
+  \pause
+  Für Profis, die voll funktionale Variante:
+  \pause
+  \begin{lstlisting}
+    insertSort = foldr insert []
+  \end{lstlisting}
+  Große Magie! Ab zur Tafel.
+\end{frame}
+
 \end{document}
