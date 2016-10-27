@@ -36,4 +36,25 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{pow2}}
+  Wesentlich effizienter ist es, bei jedem Rekursionsschritt den Exponenten zu halbieren und die Basis zu quadrieren:
+  \begin{align*}
+    b^{2e} &= (b^2)^e \\
+    b^{2e+1} &= b \cdot (b^2)^e
+  \end{align*}
+  Schreiben Sie weitere Funktion \lstinline{pow2}, die Potenz auf diese Weise effizienter berechnet.
+  Wie viele Aufrufe braucht \lstinline{pow2} im Vergleich zu \lstinline{pow1}?
+  \pause
+  \begin{lstlisting}
+    pow2 b 0 = 1
+    pow2 b e
+      | even e    = pow2 (b*b) (e `div` 2)
+      | otherwise = b * pow2 (b*b) (e `div` 2)
+  \end{lstlisting}
+  
+  \pause
+  \lstinline{pow1} läuft in $\Theta(e)$, \lstinline{pow2} in $\Theta(\log e)$.
+\end{frame}
+
 \end{document}
