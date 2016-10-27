@@ -73,4 +73,30 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{root}}
+  Implementieren Sie die Funktion \lstinline{root e r}, die ganzzahlige, \lstinline{e}-te Wurzel von \lstinline{r} berechnet,
+  also die größte nichtnegative ganze Zahl $x$ mit $x^e \leq r$.
+  
+  Verwendetes Verfahren: Intervallhalbierung.
+  Hilfsfunktion erhält Grenzen $a$, $b$ eines Intervalls mit $a \leq x < b$.
+  Ist $b-a=1$, so ist $a=x$.
+  Sonst halbiere das Intervall und prüfe, in welcher Hälfte die Zahl liegt.
+  
+  Vorsicht bei Randfällen!
+  Für welche \lstinline{e}, \lstinline{r} ist Berechnung möglich?
+  \pause
+  \begin{lstlisting}
+    root e r
+      | e < 1     = error "Zu kleiner Wurzelexponent"
+      | r < 0     = error "Negativer Radikand"
+      | otherwise = searchRoot 0 (r+1) where
+          searchRoot a b
+            | b - a <= 1       = a
+            | pow3 half e <= r = searchRoot half b
+            | otherwise        = searchRoot a half
+            where half = (a + b) `div` 2
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
