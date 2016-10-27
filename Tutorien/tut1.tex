@@ -154,6 +154,21 @@
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{fold}
+  Mit einer \emph{fold}-Operation wird eine Liste von Werten zu einem einzigen Wert zusammengefasst:
+  eine Funktion, die zwei Werte zu einem zusammenfasst, wird pro Listenelement mit diesem Element und einem Zwischenergebnis aufgerufen,
+  um das nächste Zwischenergebnis zu produzieren.
+  \lstinline{foldl} arbeitet dabei linksassoziativ, \lstinline{foldr} rechtsassoziativ:
+  \begin{lstlisting}
+    foldl (+) 0 [1,2,3] = ((0+1)+2)+3
+    foldr (+) 0 [1,2,3] = 1+(2+(3+0))
+    
+    foldl f s [a,b,c] = f (f (f s a) b) c
+    foldr f s [a,b,c] = f a (f b (f s c))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{\lstinline{merge}}
   Schreiben Sie eine Funktion \lstinline{merge}, die zwei sortierte Listen zu einer sortieren Liste zusammenführt.
   \pause
