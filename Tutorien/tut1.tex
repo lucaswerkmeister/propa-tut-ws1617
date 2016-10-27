@@ -99,4 +99,28 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{isPrime}}
+  Schreiben Sie eine Funktion \lstinline{isPrime}, die für $n \geq 2$ testet, ob $n$ durch eine Zahl zwischen 2 und $\sqrt{2}$ teilbar ist.
+  \pause
+  \begin{lstlisting}
+    isPrime n
+      | n < 2     = error "Zu kleine Zahl bei Primzahltest"
+      | otherwise = searchPrime 2 where
+          limit = root 2 n
+          searchPrime d
+            | d > limit      = True
+            | n `mod` d == 0 = False
+            | otherwise      = searchPrime (d+1)
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    isPrime n = not $ any (\k -> n `mod` k == 0) [2..root 2 n]
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    isPrime n = null $ filter (\k -> n `mod` k == 0) [2..root 2 n]
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
