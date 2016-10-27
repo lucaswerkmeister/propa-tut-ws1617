@@ -123,4 +123,17 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{insert}}
+  Schreiben Sie eine Funktion \lstinline{insert}, die eine Zahl in eine aufsteigend sortierte Liste von Zahlen korrekt einfügt.
+  \pause
+  \begin{lstlisting}
+    insert x [] = [x]
+    insert x (y:ys)
+      | x <= y    = x:y:ys
+      | otherwise = y : insert x ys
+  \end{lstlisting}
+  Kann man auch in endrekursiver Form schreiben, bringt aber nicht viel.
+\end{frame}
+
 \end{document}
