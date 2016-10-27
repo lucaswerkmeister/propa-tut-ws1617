@@ -123,6 +123,22 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Hoogle}
+  Wie findet man diese ganzen Kombinatoren?
+  Wenn man ungefähr weiß, wonach man sucht, aber nicht, wie es heißt, ist \underline{\href{https://www.haskell.org/hoogle/}{Hoogle}} sehr nützlich:
+  man gibt eine Signatur ein und Hoogle sucht nach passenden Funktionen.
+  
+  \begin{itemize}
+  \item Eine Funktion, die Elemente aus einer Liste auswählt, basierend auf einem Prädikat:
+    \lstinline{(a -> Bool) -> [a] -> [a]}
+  \item Eine Funktion, die prüft, ob ein Prädikat für irgendein Element erfüllt ist, also jedes Element auf Bool abbildet und am Ende ein Bool zurückgibt:
+    \lstinline{(a -> Bool) -> [a] -> Bool}
+  \item Zwei Listen aneinanderhängen:
+    \lstinline{[a] -> [a] -> [a]}
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{\lstinline{insert}}
   Schreiben Sie eine Funktion \lstinline{insert}, die eine Zahl in eine aufsteigend sortierte Liste von Zahlen korrekt einfügt.
