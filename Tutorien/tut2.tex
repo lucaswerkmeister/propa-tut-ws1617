@@ -284,4 +284,36 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Unendliche Listen: \lstinline{iterate}}
+  \begin{lstlisting}
+    iterate :: (a -> a) -> a -> [a]
+    iterate f x = x : iterate f (f x)
+  \end{lstlisting}
+  \lstinline{iterate} produziert eine unendliche Liste aus einem Startwert und einer Folgefunktion,
+  die immer wieder auf den letzten Wert angewendet wird.
+
+  \begin{itemize}
+  \item Natürliche Zahlen:
+    \pause
+    \begin{lstlisting}
+      -- ohne iterate:
+      nats = 1 : map (+1) nats
+      -- mit iterate:
+      nats = iterate (+1) 1
+      -- noch besser:
+      nats = [1..]
+    \end{lstlisting}
+    \pause
+  \item Zweierpotenzen:
+    \pause
+    \begin{lstlisting}
+      -- ohne iterate:
+      pows = 1 : map (*2) pows
+      -- mit iterate
+      pows = iterate (*2) 1
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
 \end{document}
