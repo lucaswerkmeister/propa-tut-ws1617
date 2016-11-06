@@ -108,4 +108,24 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{List Comprehensions}
+  Schreibweise zur Konstruktion von Listen.
+  Eine List Comprehension hat zwei Teile:
+  links einen Ausdruck,
+  und rechts eine Reihe von Generatoren, Guards, und \texttt{let}s.
+  \begin{lstlisting}
+    [a + b | a<-[1..], b<-[1..a], -- Generatoren
+             odd a, odd b,        -- Guards
+             let p=a*b,           -- let
+             p<1000]              -- Guard
+  \end{lstlisting}
+  Ergibt eine Liste mit den Ergebnissen des Ausdrucks für jede Kombination der Variablen aus den Generatoren, für die alle Guards erfüllt sind.
+  Dabei werden die hinteren Generatoren zuerst durchlaufen:
+  \begin{lstlisting}
+    [(a,b) | a<-[1,2], b<-[1,2]] = [(1,1),(1,2),(2,1),(2,2)]
+  \end{lstlisting}
+  Wenn also der zweite Generator unendlich ist, wird das zweite Element des ersten Generators nie erreicht.
+\end{frame}
+
 \end{document}
