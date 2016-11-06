@@ -30,4 +30,36 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{add}}
+  \begin{lstlisting}
+    type Polynom = [Double]
+  \end{lstlisting}
+  Polynom $1 + 2 x + 3 x^2$ wird als Liste \lstinline{[1,2,3]} dargestellt.
+  Definiere Polynomaddition \lstinline{add :: Polynom -> Polynom -> Polynom}.
+  \pause
+  \begin{lstlisting}
+    add a [] = a
+    add [] b = b
+    add (a:as) (b:bs) = a + b : add as bs
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{add}}
+  Lösung mit Listenkombinatoren:
+  \begin{lstlisting}
+    add = zipWith (+)
+  \end{lstlisting}
+  \pause
+  Leider \textbf{inkorrekt!} Funktioniert nicht für unterschiedlich lange Listen:
+  \begin{lstlisting}
+    add [1,2] [1] = [2]
+    -- sollte aber sein:
+                    [2,2]
+  \end{lstlisting}
+  denn \lstinline{zipWith} schneidet am Ende der kürzeren Liste ab,
+  wir müssen aber den Rest der längeren Liste anhängen (gewissermaßen noch \lstinline{[0,0..]} addieren).
+\end{frame}
+
 \end{document}
