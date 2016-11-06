@@ -92,4 +92,20 @@
   (Verwende \lstinline{drop 1}, weil \lstinline{tail []} einen Fehler ergibt, \lstinline{drop 1 []} hingegen nicht.)
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{atLeastElements}}
+  \begin{lstlisting}
+    atLeastElements :: [Int] -> Int -> Bool
+  \end{lstlisting}
+  Gibt zurück, ob mindestens $n$ Listenelemente $\geq n$ sind.
+  \pause
+  \begin{lstlisting}
+    atLeastElements l n = length (filter (>=n) l) >= n
+  \end{lstlisting}
+  Oder (Beispiellösung):
+  \begin{lstlisting}
+    atLeastElements l n = length [m | m <- list, m >= n] >= n
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
