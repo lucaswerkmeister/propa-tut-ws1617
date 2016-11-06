@@ -267,4 +267,21 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{decode}}
+  \lstinline{decode} kehrt \lstinline{encode} um.
+  Verwende \lstinline{replicate :: Int -> a -> [a]}.
+  \pause
+  \begin{lstlisting}
+    decode [] = []
+    decode ((x,n):xs) = replicate n x ++ decode xs
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    decode = concat . map (\(x,n) -> replicate n x)
+    --- concat + map gibt es auch als spezielle Funktion:
+    decode = concatMap (\(x,n) -> replicate n x)
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
