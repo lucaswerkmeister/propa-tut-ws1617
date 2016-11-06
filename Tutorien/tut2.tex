@@ -214,4 +214,21 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{splitWhen}}
+  \begin{lstlisting}
+    splitWhen :: (a -> Bool) -> [a] -> ([a],[a])
+    --- Beispiel:
+    splitWhen even [1,2,3] = ([1],[2,3])
+  \end{lstlisting}
+  Zerlegt eine Liste an der Stelle, an der ein Prädikat zum ersten Mal erfüllt ist.
+  \pause
+  \begin{lstlisting}
+    splitWhen p [] = ([],[])
+    splitWhen p (x:xs)
+      | p x       = ([],x:xs)
+      | otherwise = let (ys,zs) = splitWhen p xs in (x:ys,zs)
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
