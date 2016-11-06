@@ -128,4 +128,27 @@
   Wenn also der zweite Generator unendlich ist, wird das zweite Element des ersten Generators nie erreicht.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hIndexCorrect}}
+  \begin{lstlisting}
+    hIndexCorrect :: ([Int] -> Int) -> [Int] -> Bool
+  \end{lstlisting}
+  Prüft, ob die gegebene Funktion für die gegebene Liste tatsächlich die größte Zahl $n \leq $\lstinline{(length list)} zurückgibt,
+  so das mindestens $n$ Listenelemente $\geq n$ sind.
+  Verwende \lstinline{atLeastElements}.
+  \pause
+  \begin{lstlisting}
+    hIndexCorrect hIndex l = atLeastElements l n
+      && not (atLeastElements l (n+1))
+      where n = hIndex l
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    hIndexCorrect hIndex l =
+      all (atLeastElements l) [0..n] &&
+      all (not . atLeastElements l) [n+1 .. length l]
+      where n = hIndex l
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
