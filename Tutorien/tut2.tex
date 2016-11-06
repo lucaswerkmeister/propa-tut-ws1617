@@ -151,4 +151,22 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hIndex}}
+  \begin{lstlisting}
+    hIndex :: [Int] -> Int
+  \end{lstlisting}
+  Berechnet größte Zahl $n$, so dass mindestens $n$ Listenelemente $\geq n$ sind.
+  Vorgehen: sortiere Liste absteigend und zähle von vorne durch, bis das $i$. Element (ab 0 gezählt) $\leq i$ ist.
+  Verwende \lstinline{sort} und \lstinline{reverse} aus \lstinline{Data.List}.
+  \pause
+  \begin{lstlisting}
+    hIndex l = helper (reverse (sort l)) 0
+      where helper (e:ls) i
+              | e <= i    = i
+              | otherwise = helper ls (i+1)
+            helper [] i = i
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
