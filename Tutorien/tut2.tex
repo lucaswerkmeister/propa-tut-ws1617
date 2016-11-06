@@ -231,4 +231,25 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{group}}
+  \begin{lstlisting}
+    group :: Eq a => [a] -> [[a]]
+    -- Beispiel:
+    group "aaaBBcDDDD" = ["aaa","BB","c","DDDD"]
+  \end{lstlisting}
+  Gruppiert aufeinanderfolgende gleiche Elemente einer Liste.
+  Verwende \lstinline{splitWhen}.
+  \pause
+  \begin{lstlisting}
+    group [] = []
+    group (x:xs) = let (group1,rest) = splitWhen (/=x) xs
+                   in (x:group1) : group rest
+  \end{lstlisting}
+  (\lstinline{Eq a => ...} kam in der Vorlesung noch nicht dran,
+  deshalb belassen wir es für heute bei:
+  \lstinline{group} ist für jeden Typ \lstinline{a} definiert,
+  den man mit \lstinline{==} und \lstinline{/=} vergleichen kann.)
+\end{frame}
+
 \end{document}
