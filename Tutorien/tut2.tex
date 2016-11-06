@@ -252,4 +252,19 @@
   den man mit \lstinline{==} und \lstinline{/=} vergleichen kann.)
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{encode}}
+  \begin{lstlisting}
+    encode :: Eq a => [a] -> [(a,Int)]
+    -- Beispiel:
+    encode "aaaBBcDDDD" = [('a',3),('B',2),('c',1),('D',4)]
+  \end{lstlisting}
+  Lauflängenkodierung: ergibt Tupel von Element und Anzahl Wiederholungen dieses Elements.
+  Verwende \lstinline{group}.
+  \pause
+  \begin{lstlisting}
+    encode l = map (\g -> (head g, length g)) (group l)
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
