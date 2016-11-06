@@ -62,4 +62,15 @@
   wir müssen aber den Rest der längeren Liste anhängen (gewissermaßen noch \lstinline{[0,0..]} addieren).
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{eval}}
+  Auswertung des Polynoms an Stelle $x$ durch Horner-Schema:
+  \[\texttt{eval [1,2,3] x }= 1 + x\cdot(2 + x\cdot(3 + x\cdot0))\]
+  Welche Fold-Version bietet sich hier an?
+  \pause
+  \begin{lstlisting}
+    eval p x = foldr (\a acc -> a + x * acc) 0 p
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
