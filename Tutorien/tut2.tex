@@ -73,4 +73,23 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{deriv}}
+  Ableitung des Polynoms. Welcher Listenkombinator bietet sich an?
+  \pause
+  \begin{lstlisting}
+    deriv [] = []
+    deriv (_:p) = zipWith (*) p [1..]
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    deriv p = drop 1 $ zipWith (*) [0..] p
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    deriv = drop 1 . zipWith (*) [0..]
+  \end{lstlisting}
+  (Verwende \lstinline{drop 1}, weil \lstinline{tail []} einen Fehler ergibt, \lstinline{drop 1 []} hingegen nicht.)
+\end{frame}
+
 \end{document}
