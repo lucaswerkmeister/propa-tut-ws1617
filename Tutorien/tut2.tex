@@ -169,4 +169,49 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hIndex}}
+  Alternative Version:
+  \begin{lstlisting}
+    hIndex l =
+      length
+      (takeWhile (\(i, n) -> n > i)
+      (zip [0..]
+      (reverse
+      (sort l))))
+  \end{lstlisting}
+  \pause
+  Die meisten Klammern kann man mit \lstinline{$}-Schreibweise loswerden:
+  \begin{lstlisting}
+    hIndex l =
+      length
+      $ takeWhile (\(i, n) -> n > i)
+      $ zip [0..]
+      $ reverse
+      $ sort l
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hIndex}}
+  \begin{lstlisting}
+    hIndex l =
+      length
+      $ takeWhile (\(i, n) -> n > i)
+      $ zip [0..]
+      $ reverse
+      $ sort l
+  \end{lstlisting}
+  \pause
+  Und jetzt kann man noch einmal Currying anwenden und alle \lstinline{$} zu \lstinline{.} machen:
+  \begin{lstlisting}
+    hIndex =
+      length
+      . takeWhile (\(i, n) -> n > i)
+      . zip [0..]
+      . reverse
+      . sort
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
