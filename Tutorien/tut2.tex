@@ -331,4 +331,16 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Unendliche Listen}
+  Unbedingt testen, dass die Funktionen auch für unendliche Listen funktionieren!
+  \lstinline{merge} z.\,B. gab es schon im ersten Übungsblatt,
+  aber endrekursive Versionen mit Akkumulator funktionieren hier nicht.
+  Beispieltest:
+  \begin{lstlisting}
+    (take 100 $ merge [1,3..] [2,4..]) == [1..100]
+  \end{lstlisting}
+  Es muss möglich sein, die ersten 100 Elemente zu berechnen, ohne die ganze Liste zu berechnen (durch Lazy Evaluation).
+\end{frame}
+
 \end{document}
