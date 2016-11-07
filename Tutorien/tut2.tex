@@ -316,4 +316,19 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Unendliche Listen: Comprehensions}
+  Definiere mit Hilfe von Comprehensions die unendliche Liste aller \emph{pythagoreischen Tripel},
+  also aller $(x,y,z) ∈ ℕ^3$, für die gilt:
+  \[x^2 + y^2 = z^2 \quad \land \quad x,y,z>0\]
+  \pause
+  \begin{lstlisting}
+    triples = [(x,y,z) |
+               z <- [1..],
+               y <- [1..z-1],
+               x <- [1..y-1],
+               x^2 + y^2 == z^2]
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
