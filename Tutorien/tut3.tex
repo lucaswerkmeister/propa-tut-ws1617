@@ -208,4 +208,46 @@
   ist diese Lösung sogar sortiert \emph{und} frei von Mehrfachelementen.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Algebraische Datentypen}
+  \emph{Algebraische Datentypen} setzen einen Typ aus einem oder mehreren Konstruktoren zusammen.
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/base/GHC/Base.hs, L183+L178
+  % (Note that this is “for use when compiling GHC.Base itself doesn't work”, hidden with an #if 0;
+  % the real Bool is buried in compiler/prelude/TysWiredIn.hs, full of magic,
+  % whereas the real () is defined just like this but in libraries/ghc-prim/GHC/Tuple.hs.)
+  \begin{lstlisting}
+    -- GHC.Base
+    data  Bool  =  False | True
+    data  ()  =  ()
+  \end{lstlisting}
+  Konstruktoren können Parameter haben.
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/base/GHC/IO/Exception.hs, L224-226
+  \begin{lstlisting}
+    -- GHC.IO.Exception
+    data ExitCode
+      = ExitSuccess
+      | ExitFailure Int
+  \end{lstlisting}
+  Zugriff funktioniert über Pattern Matching:
+  \begin{lstlisting}
+    exitCode ExitSuccess = 0
+    exitCode (ExitFailure code) = code
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Algebraische Datentypen}
+  Datentypen können auch Typparameter haben, die dann in den Konstruktoren verwendet werden können.
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/base/GHC/Base.hs, L204
+  \begin{lstlisting}
+    -- GHC.Base
+    data  Maybe a  =  Nothing | Just a
+  \end{lstlisting}
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/base/Data/Either.hs, L124
+  \begin{lstlisting}
+    -- Data.Either
+    data  Either a b  =  Left a | Right b
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
