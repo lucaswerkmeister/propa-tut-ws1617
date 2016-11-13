@@ -31,4 +31,21 @@
   \lstinline{zipWith} war ein \emph{Hinweis}, nicht Teil der Aufgabenstellung selbst, daher wäre auch diese Lösung in der Klausur gültig gewesen.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{collatz}}
+  Die Collatz-Vermutung besagt, dass die Zahlenfolge
+  \[a_{n+1} = \begin{cases}\frac{a_n}{2} & \text{falls $a_n$ gerade} \\ 3a_n + 1 & \text{sonst}\end{cases}\]
+  für jeden Startwert $a_0 ∈ ℕ$ die 1 erreicht.
+  
+  Definiere Funktion \lstinline{collatz}, so dass \lstinline{collatz a0} die unendliche Liste aller Folgenglieder berechnet.
+  Verwende \lstinline{iterate} mit geeigneter Hilfsfunktion.
+  \pause
+  \begin{lstlisting}
+    collatz a0 = iterate step a0
+      where step an
+              | even an   = an `div` 2
+              | otherwise = 3*an + 1
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
