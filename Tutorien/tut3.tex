@@ -48,4 +48,20 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{num}}
+  Definiere Funktion \lstinline{num}, die für Startwert $a_0$ das kleinste $n$ mit $a_n = 1$ bestimmt.
+  Testfall: \lstinline{num 4 == 2}, denn $a_0=4,a_1=2,a_2=1$.
+  \pause
+  \begin{lstlisting}
+    num m = length $ takeWhile (/=1) $ collatz m
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    import Data.List -- for elemIndex
+    import Data.Maybe -- for fromJust
+    num m = fromJust $ elemIndex 1 $ collatz m
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
