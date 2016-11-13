@@ -108,4 +108,18 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{intersect}}
+  Definiere Funktion \lstinline{intersect}, die den Schnitt zweier (möglicherweise unendlicher) Mengen berechnet.
+  Eine Menge wird dargestellt als aufsteigend sortierte Liste ihrer Elemente ohne doppelte Elemente.
+  \pause
+  \begin{lstlisting}
+    intersect (x:xs) (y:ys)
+      | x == y = x : intersect xs ys
+      | x < y  = intersect xs (y:ys)
+      | x > y  = intersect (x:xs) ys
+    intersect xs ys = []
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
