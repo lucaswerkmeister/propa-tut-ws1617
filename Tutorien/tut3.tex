@@ -12,4 +12,23 @@
   \titlepage
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fibs}}
+  Definiere unendliche Liste \lstinline{fibs :: [Integer]} aller Fibonacci-Zahlen:
+  \begin{lstlisting}
+    [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...]
+  \end{lstlisting}
+  Lässt sich mit \lstinline{zipWith} sehr kompakt definieren.
+  \pause
+  \begin{lstlisting}
+    fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+  \end{lstlisting}
+  Alternativ, ohne \lstinline{zipWith}:
+  \begin{lstlisting}
+    fibs = fibonacci 0 1
+      where fibonacci x y = x : fibonacci y (x+y)
+  \end{lstlisting}
+  \lstinline{zipWith} war ein \emph{Hinweis}, nicht Teil der Aufgabenstellung selbst, daher wäre auch diese Lösung in der Klausur gültig gewesen.
+\end{frame}
+
 \end{document}
