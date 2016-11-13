@@ -250,4 +250,91 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Typklassen}
+  \emph{Typklassen} definieren, welche Operationen auf einem bestimmten Typ ausgeführt werden können.
+  Sie deklarieren Werte und Funktionen, die für einen Typ definiert sein müssen, und können auch Standarddefinitionen angeben.
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/base/GHC/Num.hs, L31-L56
+  \begin{lstlisting}
+    -- GHC.Num
+    class  Num a  where
+        (+), (-), (*)       :: a -> a -> a
+        negate              :: a -> a
+        abs                 :: a -> a
+        signum              :: a -> a
+        fromInteger         :: Integer -> a
+    
+        x - y               = x + negate y
+        negate x            = 0 - x
+  \end{lstlisting}
+  Der vollständige Typ einer Funktion wie \lstinline{negate} ist dann nicht \lstinline{a -> a}, sondern \lstinline{Num a => a -> a}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Typklassen}
+  \begin{lstlisting}
+    -- GHC.Classes
+    class  Eq a  where
+        (==), (/=)           :: a -> a -> Bool
+        
+        {-# INLINE (/=) #-}
+        {-# INLINE (==) #-}
+        x /= y               = not (x == y)
+        x == y               = not (x /= y)
+        {-# MINIMAL (==) | (/=) #-}
+  \end{lstlisting}
+  (\lstinline!{-# ... #-}! sind Kommentare für den Compiler, können ignoriert werden.)
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Typklassen – Instanzen}
+  Mit \lstinline{instance} wird festgelegt, dass ein Typ eine Typklasse erfüllt,
+  und die dafür erforderlichen Operationen definiert.
+  \begin{lstlisting}
+    data Church = Zero | Succ Church
+    instance Eq Church where
+      Zero == Zero     = True
+      Succ x == Succ y = x == y
+      _ == _           = False
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Typklassen – Vererbung}
+  Meist werden Instanzen von den Typparametern vererbt:
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/ghc-prim/GHC/Classes.hs, L166-172
+  \begin{lstlisting}
+    -- GHC.Classes
+    instance (Eq a) => Eq [a] where
+        {-# SPECIALISE instance Eq [[Char]] #-}
+        {-# SPECIALISE instance Eq [Char] #-}
+        {-# SPECIALISE instance Eq [Int] #-}
+        []     == []     = True
+        (x:xs) == (y:ys) = x == y && xs == ys
+        _xs    == _ys    = False
+  \end{lstlisting}
+  Das heißt, \lstinline{[a]} erfüllt nur dann die Typklasse \lstinline{Eq}, wenn \lstinline{a} dies tut.
+  Wegen dieser Einschränkung (\lstinline{(Eq a) =>}) darf in der Definition dann \lstinline{x == y} geschrieben werden.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Typklassen – Vererbung}
+  Vererbung ist auch auf den Typklassen selbst möglich:
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/ghc-prim/GHC/Classes.hs, L263-273
+  \begin{lstlisting}
+    -- GHC.Classes
+    class  (Eq a) => Ord a  where
+        compare              :: a -> a -> Ordering
+        (<), (<=), (>), (>=) :: a -> a -> Bool
+        max, min             :: a -> a -> a
+    
+        compare x y = if x == y then EQ
+                      else if x <= y then LT
+                      else GT
+        -- restliche Standardimplementierungen weggelassen
+  \end{lstlisting}
+  Jeder Typ, der \lstinline{Ord} erfüllt, muss auch \lstinline{Eq} erfüllen;
+  dadurch kann die Standardimplementierung von \lstinline{compare} \lstinline{==} verwenden.
+\end{frame}
+
 \end{document}
