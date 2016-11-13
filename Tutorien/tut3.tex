@@ -84,4 +84,28 @@
   (\lstinline{help} kann man auch als \lstinline{compare `on` snd} schreiben – \lstinline{on}, aus \lstinline{Data.Function}, ist eine Variante des Verkettungsoperators \lstinline{.} für Funktionen mit zwei Argumenten.)
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{primepowers}}
+  Definiere Funktion \lstinline{primepowers}, die für gegebenen Parameter $n$ die unendliche Liste der ersten $n$ Potenzen aller Primzahlen berechnet, aufsteigend sortiert.
+  Bereits vorgegeben sind die unendliche, aufsteigend sortierte Liste \lstinline{primes} aller Primzahlen sowie \lstinline{merge} vom ersten Übungsblatt.
+  (Der Potenzoperator in Haskell ist \lstinline{^}.)
+  \pause
+  \begin{lstlisting}
+    primepowers 1 = primes
+    primepowers n = merge
+      (map (^n) primes)
+      (primepowers (n-1))
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    primepowers n = foldr merge []
+      [map (^i) primes | i <- [1..n]]
+  \end{lstlisting}
+  Aber nicht:
+  \begin{lstlisting}
+    primepowers n = foldr merge []
+      [map (p^) [1..n] | p <- primes]
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
