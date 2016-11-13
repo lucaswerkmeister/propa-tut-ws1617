@@ -152,4 +152,15 @@
   (z.\,B. \lstinline{undefined}).
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{commonMultiples}}
+  Definiere Funktion \lstinline{commonMultiples}, so dass \lstinline{commonMultiples a b c} die Liste aller gemeinsamen Vielfachen von \lstinline{a}, \lstinline{b} und \lstinline{c} bestimmt.
+  \pause
+  \begin{lstlisting}
+    commonMultiples a b c = intersectAll
+      [multiples a, multiples b, multiples c]
+      where multiples n = map (*n) [1..]
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
