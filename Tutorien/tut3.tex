@@ -64,4 +64,24 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{maxNum}}
+  Definiere Funktion \lstinline{maxNum}.
+  \lstinline{maxNum a b} soll ein Tupel \lstinline{(m, num m)} liefern, sodass \lstinline{num m} maximal ist für alle $m ∈ [a,b]$.
+  \pause
+  \begin{lstlisting}
+    maxNum a b = foldl1 help $ map (\m -> (m, num m)) [a..b]
+      where help (m, n) (m', n')
+              | n' > n    = (m', n')
+              | otherwise = (m, n)
+  \end{lstlisting}
+  Oder:
+  \begin{lstlisting}
+    import Data.List -- for maximumBy
+    maxNum a b = maximumBy help $ map (\m -> (m, num m)) [a..b]
+      where help (m,n) (m',n') = compare n n'
+  \end{lstlisting}
+  (\lstinline{help} kann man auch als \lstinline{compare `on` snd} schreiben – \lstinline{on}, aus \lstinline{Data.Function}, ist eine Variante des Verkettungsoperators \lstinline{.} für Funktionen mit zwei Argumenten.)
+\end{frame}
+
 \end{document}
