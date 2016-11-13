@@ -337,4 +337,24 @@
   dadurch kann die Standardimplementierung von \lstinline{compare} \lstinline{==} verwenden.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{deriving}}
+  Mit \lstinline{deriving} können Instanzen für bestimmte, eingebaute Typklassen automatisch generiert werden:
+  % GitHub ghc/ghc repository, tag ghc-8.0.1-release, libraries/base/GHC/Base.hs, L204-205
+  \begin{lstlisting}
+    -- GHC.Base
+    data  Maybe a  =  Nothing | Just a
+      deriving (Eq, Ord)
+  \end{lstlisting}
+  Bedeutet ungefähr:
+  \begin{lstlisting}
+    instance (Eq a) => Eq (Maybe a) where
+      Nothing == Nothing = True
+      Just a == Just b   = a == b
+      _ == _             = False
+    instance (Ord a) => Ord (Maybe a) where ...
+  \end{lstlisting}
+  Nur erlaubt für \lstinline{Eq}, \lstinline{Ord}, \lstinline{Enum}, \lstinline{Bounded}, \lstinline{Read}, und \lstinline{Show}.
+\end{frame}
+
 \end{document}
