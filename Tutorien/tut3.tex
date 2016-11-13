@@ -163,4 +163,49 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{\lstinline{hamming}}
+  Definiere unendliche Liste \lstinline{hamming} aller \emph{Hamming}-Zahlen, also aller Zahlen der Gestalt
+  \[h = 2^i \cdot 3^j \cdot 5^k \text{ mit } i,j,k ≥ 0\]
+  Mögliche Lösungen:
+  \begin{itemize}
+  \item List Comprehension
+  \item \lstinline{merge} mit folgenden Eigenschaften der Hamming-Zahlen:
+    \begin{itemize}
+    \item 1 ist die erste Hamming-Zahl
+    \item alle anderen Hamming-Zahlen sind $2h$, $3h$ oder $5h$ für eine schon berechnete Hamming-Zahl $h$
+    \end{itemize}
+  \end{itemize}
+  (Es war nicht gefordert, dass die Liste sortiert ist oder jede Zahl nur einmal vorkommt.)
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hamming} – List Comprehension}
+  \begin{lstlisting}
+    hamming = [2^i * 3^j * 5^k | i<-[0..], j<-[0..], k<-[0..]]
+  \end{lstlisting}
+  Nicht korrekt – da der letzte Generator (für \lstinline{k}) nie erschöpft wird,
+  werden \lstinline{j} und \lstinline{i} nie einen anderen Wert als \lstinline{0} annehmen,
+  die meisten Hamming-Zahlen werden also nie erreicht.
+  \pause
+  \begin{lstlisting}
+    hamming = [2^i * 3^j * 5^k | n <- [0..],
+                                 i <- [0..n],
+                                 j <- [0..(n-i)],
+                                 let k = n-i-j]
+  \end{lstlisting}
+  Ein unendlicher Generator mit Limit, gegen das man die anderen Generatoren laufen lässt.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hamming} – \lstinline{merge}}
+  \begin{lstlisting}
+    hamming = 1 : (map (2*) hamming) `merge`
+                  (map (3*) hamming) `merge`
+                  (map (5*) hamming)
+  \end{lstlisting}
+  Wenn man \lstinline{merge} so anpasst, dass Duplikate entfernt werden,
+  ist diese Lösung sogar sortiert \emph{und} frei von Mehrfachelementen.
+\end{frame}
+
 \end{document}
