@@ -122,4 +122,34 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{intersectAll}}
+  Definiere Funktion \lstinline{intersectAll}, die für endliche, nichtleere Liste von Mengen den Schnitt aller Mengen berechnet.
+  \pause
+  \begin{lstlisting}
+    intersectAll (l:ls) = foldr intersect l ls
+    -- oder
+    intersectAll = foldr1 intersect
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{intersectAll []}}
+  Viele Abgaben hatten diesen Spezialfall:
+  \begin{lstlisting}
+    intersectAll [] = []
+  \end{lstlisting}
+  Mathematisch gesehen wäre aber die Grundmenge sinnvoller, damit gilt:
+  \begin{align*}
+    & \bigcap \{ M_1, M_2, M_3 \} \\
+    = & M_1 \cap \left(\bigcap \{ M_2, M_3 \}\right) \\
+    = & M_1 \cap \left(M_2 \cap \left(\bigcap \{ M_3 \}\right)\right) \\
+    = & M_1 \cap \left(M_2 \cap \left(M_3 \cap \left(\bigcap \{\}\right)\right)\right)
+  \end{align*}
+  Die Grundmenge ist aber kein gültiger Wert,
+  und um die Invariante \lstinline{intersectAll (x:xs) == intersect x $ intersectAll xs} auch für \lstinline{xs = []} nicht zu verletzen,
+  muss \lstinline{intersectAll []} einen Fehler ergeben
+  (z.\,B. \lstinline{undefined}).
+\end{frame}
+
 \end{document}
