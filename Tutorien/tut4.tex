@@ -418,4 +418,23 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{partition}}
+  \begin{lstlisting}
+    partition :: (a -> Bool) -> Tree a -> (Tree a, Tree a)
+  \end{lstlisting}
+  teilt einen Baum gemäß einem Prädikat in zwei Teilbäume auf,
+  wobei der erste alle Elemente enthält, für die das Prädikat erfüllt ist,
+  und der zweite alle anderen.
+  \pause
+  \begin{lstlisting}
+    partition p Leaf = (Leaf, Leaf)
+    partition p (Node t1 x t2) = if p x
+      then (Node t1t x t2t, merge t1f t2f)
+      else (merge t1t t2t, Node t1f x t2f)
+      where (t1t, t1f) = partition p t1
+            (t2t, t2f) = partition p t2
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
