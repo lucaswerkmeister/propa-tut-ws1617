@@ -386,4 +386,19 @@
   sondern dürfen uns nur auf die Invariante (sortierte Baumstruktur) verlassen.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{deleteMin}}
+  \begin{lstlisting}
+    deleteMin :: Tree a -> (a, Tree a)
+  \end{lstlisting}
+  löscht aus einem nichtleeren, sortierten Baum das kleinste Element.
+  Zurückgegeben wird dieses Element sowie der Baum ohne dieses Element.
+  \pause
+  \begin{lstlisting}
+    deleteMin (Node Leaf x t2) = (x, t2)
+    deleteMin (Node t1 x t2) = (y, Node t1' x t2)
+      where (y, t1') = deleteMin t1
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
