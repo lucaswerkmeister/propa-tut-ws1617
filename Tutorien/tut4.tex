@@ -437,4 +437,147 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Lambda-Kalkül}
+  Sehr wenig Syntax: Klammerung, Applikation (Anwendung, „Aufruf“) durch Hintereinanderschreiben, Abstraktion mit Lambda.
+  Beispiele:
+  \begin{itemize}
+  \item Identitätsfunktion \lstinline{id}: $λx.~x$
+  \item Konstante Funktion \lstinline{const}: $λx.~λy.~x$
+  \item Doppelte Anwendung: $λf.~λx.~f~(f~x)$
+  \end{itemize}
+  Eine einzige Operation: $β$-Reduktion.
+  Reduziere $(λx.~t_1)~t_2$ zu $t_1[x \mapsto t_2]$,
+  also $t_1$, wobei alle freien Vorkommen von $x$ durch $t_2$ ersetzt werden.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Auswertungsstrategien}
+  Oft stehen mehrere \emph{Redexe} (engl. \emph{\textbf{red}ucible \textbf{ex}pression}) zur Reduktion zur Verfügung.
+  Auswertungsstrategie bestimmt dann, welcher reduziert wird.
+  \begin{description}
+  \item[Normalreihenfolge]
+    Linksäußerster Redex wird reduziert.
+  \item[Call-By-Name]
+    Wie Normalreihenfolge, aber wenn der ganze Ausdruck eine Funktion ist, wird nichts gemacht.
+  \item[Call-By-Value]
+    Reduziere linkesten Redex, der nicht von einem $λ$ umgeben ist und dessen Argument ein Wert ist.
+    Im reinen Lambda-Kalkül sind nur Abstraktionen (Lambdas) Werte;
+    alles andere (Applikationen, meist geklammert) muss also ausgewertet werden.
+    Kurz gesagt: Funktionsargumente werden vor dem Funktionsaufruf ausgewertet.
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Beispiel Auswertung}
+  \[(λx.~λy.~y)~((λx.~x~x)~(λx.~x~x))~(λx.~x)\]
+  \pause
+  Call-By-Name:
+  \begin{align*}
+    & (λ\underline{x}.~λy.~y)~\underline{((λx.~x~x)~(λx.~x~x))}~(λx.~x) \\
+    & (λ\underline{y}.~y)~\underline{(λx.~x)} \\
+    & (λx.~x)
+  \end{align*}
+  \pause
+  Call-By-Value:
+  \begin{align*}
+    & (λx.~λy.~y)~((λ\underline{x}.~x~x)~\underline{(λx.~x~x)})~(λx.~x) \\
+    & (λx.~λy.~y)~((λ\underline{x}.~x~x)~\underline{(λx.~x~x)})~(λx.~x) \\
+    & \vdots
+  \end{align*}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Äquivalenz}
+  \begin{description}
+  \item[$α$-Äquivalenz ($\alphaequiv$)]
+    Terme sind gleich bis auf unterschiedliche Variablennamen
+    und können durch korrekte(!) Umbenennung ineinander überführt werden.
+    \begin{align*}
+      λx.~x~x\quad&\alphaequiv\quadλy.~y~y \\
+      λx.~λy.~x~y\quad&\not\alphaequiv\quadλx.~λx.~x~x
+    \end{align*}
+  \item[$η$-Äquivalenz ($\etaequiv$)]
+    $λx.~f~x$ ist $η$-äquivalent zu $f$, falls $x$ nicht freie Variable von $f$ ist.
+    Entspricht etwa Currying in Haskell:
+    \begin{lstlisting}
+      f' x = f x
+      -- Currying
+      f' = f
+      -- Lambda
+      f' = \x -> f x
+      -- Eta-Reduktion
+      f' = f
+    \end{lstlisting}
+    TODO linter?
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Übung: Freie Variablen}
+  \[t = (λa.~λb.~(λx.~a~b~x)~(λy.~b~y~x)~a)~(λf.~f~f)~g\]
+  Geben Sie die Menge der Variablen an, die frei in $t$ vorkommen.
+  \pause
+  \[t = (λa.~λb.~(λx.~a~b~x)~(λy.~b~y~\underline{x})~a)~(λf.~f~f)~\underline{g}\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Übung: Redexe}
+  \[t = (λa.~λb.~(λx.~a~b~x)~(λy.~b~y~x)~a)~(λf.~f~f)~g\]
+  Kommt dieser Term als Redex in $t$ vor?
+  \begin{enumerate}
+  \item $(λa.~λb.~(λx.~a~b~x)~(λy.~b~y~x)~a)~(λf.~f~f)$ \pause \quad ✔ \pause
+  \item $λb.~(λx.~a~b~x)~(λy.~b~y~x)~a$ \pause \quad ✘, kein Redex \pause
+  \item $(λx.~a~b~x)~(λy.~b~y~x)$ \pause \quad ✔ \pause
+  \item $(λy.~b~y~x)~a$ \pause \quad ✘, falsch geklammert \pause
+  \item $(λf.~f~f)~g$ \pause \quad ✘, falsch geklammert \pause
+  \end{enumerate}
+  Und welcher wird unter Call-By-Name zuerst ausgeführt? \pause 1.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Übung: Normalform}
+  \[t = (λa.~λb.~(λx.~a~b~x)~(λy.~b~y~x)~a)~(λf.~f~f)~g\]
+  Geben Sie Normalform für $t$ an.
+  \pause
+  Call-By-Name:
+  \begin{align*}
+    \onslide<2->{
+      & t \\
+      = & (λa.~λb.~(λx.~a~b~x)~(λy.~b~y~x)~a)~(λf.~f~f)~g \\
+    }
+    \onslide<3->{
+      = & (λb.~(λx.~(λf.~f~f)~b~x)~(λy.~b~y~x)~(λf.~f~f))~g \\
+    }
+    \onslide<4->{
+      = & (λx.~(λf.~f~f)~g~x)~(λy.~g~y~x)~(λf.~f~f) \\
+    }
+    \onslide<5->{
+      = & (λf.~f~f)~g~(λy.~g~y~x)~(λf.~f~f) \\
+    }
+    \onslide<6->{
+      = & g~g~(λy.~g~y~x)~(λf.~f~f)
+    }
+  \end{align*}
+  \onslide<7->{Fertig, keine weiteren Redexe.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Übung: Äquivalenz}
+  Gilt $t_1 \alphaequiv t_2$, $t_1 \etaequiv t_2$, $t_1 \Rightarrow t_2$?
+  (Erinnerung: $α$-Äquivalenz durch Umbenennen, $η$-Äquivalenz durch Currying.)
+  
+  \begin{table}
+    \centering
+    \begin{tabular}{l l|c c c}
+      $t_1$ & $t_2$ & $t_1 \alphaequiv t_2$ & $t_1 \etaequiv t_2$ & $t_1 \Rightarrow t_2$ \\
+      \hline
+      \onslide<1->{$λx.~(λy.~y)~x$ & $λx.~x$} & \onslide<2->{✘} & \onslide<3->{✘} & \onslide<4->{✔} \\
+      \onslide<1->{$λx.~(λy.~y)~x$ & $λy.~y$} & \onslide<5->{✘} & \onslide<6->{✔} & \onslide<7->{✘} \\
+      \onslide<1->{$λx.~(λx.~x)~x$ & $λx.~x$} & \onslide<8->{✘} & \onslide<9->{✔} & \onslide<10->{✔} \\
+      \onslide<1->{$(λa.~a~a)~(λx.~x~x)$ & $(λx.~x~x)~(λx.~x~x)$} & \onslide<11->{✔} & \onslide<12->{✘} & \onslide<13->{✔}
+    \end{tabular}
+  \end{table}
+\end{frame}
+
 \end{document}
