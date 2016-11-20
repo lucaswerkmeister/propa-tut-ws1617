@@ -280,4 +280,25 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{cfold}}
+  Definiere
+  \begin{lstlisting}
+    cfold :: Exp t -> Exp t
+  \end{lstlisting}
+  um einen Ausdruck mit Konstantenfaltung zu optimieren.
+  Beispiel: \lstinline{cfold (Add (Const 1) (Const 2)) = Const 3}
+  \pause
+  \begin{lstlisting}
+    cfold' (Add (Const a) (Const b)) = Const (a+b)
+    cfold' (And (Const a) (Const b)) =
+      Const (if a /= 0 && b /= 0 then 1 else 0)
+    cfold' x = x
+    
+    cfold (Add e1 e2) = cfold' (Add (cfold e1) (cfold e2))
+    cfold (And e1 e2) = cfold' (And (cfold e1) (cfold e2))
+    cfold x = x
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
