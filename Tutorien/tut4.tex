@@ -327,4 +327,46 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{optimize}}
+  Konstantenfaltung und Vereinfachung können gegenseitig voneinander profitieren.
+  Für welchen Ausdruck muss man erst Konstanten falten und dann vereinfachen?
+  \pause
+  \begin{lstlisting}
+    And (Var x) (Add (Const 1) (Const (-1)))
+    = And (Var x) (Const 0)
+    = Const 0
+  \end{lstlisting}
+  \pause
+  Für welchen Ausdruck muss man erst vereinfachen und dann Konstanten falten?
+  \pause
+  \begin{lstlisting}
+    Add ((And (Var x) (Const 0))) (Const 0)
+    = Add (Const 0) (Const 0)
+    = Const 0
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{optimize}}
+  Definiere
+  \begin{lstlisting}
+    optimize :: Eq t => Exp t -> Exp t
+  \end{lstlisting}
+  um beide Optimierungen so lange anzuwenden, bis sich der Ausdruck nicht mehr verändert.
+  \pause
+  \begin{lstlisting}
+    optimize x
+      | x == ox   = x
+      | otherwise = optimize ox
+      where ox = cfold $ simplify x
+  \end{lstlisting}
+  \begin{lstlisting}
+    optimize x
+      | x /= cfold x    = optimize (cfold x)
+      | x /= simplify x = optimize (simplify x)
+      | otherwise       = x
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
