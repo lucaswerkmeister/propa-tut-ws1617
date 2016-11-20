@@ -12,4 +12,217 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Typen und Typklassen in Haskell}
+  Geben Sie für folgende Haskell-Funktionen die allgemeinstmöglichen Typen einschließlich etwaiger Typklasseneinschränkungen an.
+  Begründen Sie, warum diese Einschränkungen nötig sind.
+  
+  (Der erste Teil geht natürlich mit GHCi + \texttt{:t}; wichtig ist die Erklärung.)
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun1}}
+  \begin{lstlisting}
+    fun1 xs = (xs == [])
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    :t fun1
+    fun1 :: Eq t => [t] -> Bool
+  \end{lstlisting}
+  \pause
+  \lstinline{Eq} ist nötig wegen
+  \begin{lstlisting}
+    instance Eq a => Eq [a]
+  \end{lstlisting}
+  Gleichheit von Listen ist nur für Listen von \lstinline{==}-baren Elementen definiert.
+  
+  \pause
+  Eine gleichwertige Definition, die ohne \lstinline{Eq} auskommt:
+  \begin{lstlisting}
+    fun1 [] = True
+    fun1 (x:xs) = False
+  \end{lstlisting}
+  oder einfach \lstinline{fun1 = null}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun2}}
+  \begin{lstlisting}
+    fun2 f a = foldr f "a"
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    :t fun2
+    
+    -- GHC <= 7.8:
+    fun2 ::
+      (a -> [Char] -> [Char]) -> t -> [a] -> [Char]
+    
+    -- GHC >= 7.10:
+    fun2 ::
+      Foldable t1 =>
+      (a -> [Char] -> [Char]) -> t -> t1 a -> [Char]
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Exkurs: \lstinline{Foldable}}
+  \lstinline{Foldable}: neue Abstraktion in GHC 7.10.
+  Definiert
+  \lstinline{foldr}, \lstinline{foldl},
+  \lstinline{null}, \lstinline{length}, \lstinline{elem},
+  \lstinline{minimum}, \lstinline{maximum}, \lstinline{sum}, \lstinline{product}
+  und einige andere Operationen.
+  Instanzen:
+  \begin{lstlisting}
+    instance Foldable [] -- Defined in Data.Foldable
+    instance Foldable Maybe -- Defined in Data.Foldable
+    instance Foldable (Either a) -- Defined in Data.Foldable
+    instance Foldable ((,) a) -- Defined in Data.Foldable
+  \end{lstlisting}
+  Beachte: allen Instanzen fehlt noch ein Typargument.
+  Die Signatur
+  \begin{lstlisting}
+    null :: Foldable t => t a -> Bool
+  \end{lstlisting}
+  bedeutet dann zum Beispiel für \lstinline{t = []}
+  \begin{lstlisting}
+    null :: [] a -> Bool
+  \end{lstlisting}
+  und \lstinline{[] a} bedeutet \lstinline{[a]}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Exkurs: \lstinline{Foldable}}
+  Auch 2-Tupel sind \lstinline{Foldable} (auf dem zweiten Element),
+  mit lustigen Ergebnissen:
+  \begin{lstlisting}
+    Prelude> length (1,2)
+    1
+    Prelude> elem 1 (1,2)
+    False
+    Prelude> minimum (1,2)
+    2
+    Prelude> sum (1,2)
+    2
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exkurs: \lstinline{Foldable}}
+  In der Klausur gilt:
+  wenn eine Lösung in irgendeiner Haskell-Version gültig ist,
+  wird sie auch akzeptiert.
+  Für \lstinline{fun2} wären also sowohl die Signatur mit Liste als auch die mit \lstinline{Foldable} in Ordnung.
+  
+  (Disclaimer: das ist eine Folie vom letzten Jahr, dieses Jahr habe ich noch nicht nachgefragt.
+  Falls sich was ändert, sage ich euch Bescheid.)
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun3}}
+  \begin{lstlisting}
+    fun3 f a xs c = foldl f a xs c
+    -- der Einfachkeit halber sei foldl ohne Foldable:
+    foldl :: (b -> a -> b) -> b -> [a] -> b
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    :t fun3
+    fun3 ::
+      ((b -> c) -> a -> b -> c) ->
+      (b -> c) -> [a] -> b -> c
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun4}}
+  \begin{lstlisting}
+    fun4 f xs = map f xs xs
+  \end{lstlisting}
+  \pause
+  Nicht typisierbar.
+  \begin{lstlisting}
+    :t map
+    map :: (a -> b) -> [a] -> [b]
+  \end{lstlisting}
+  Typ \lstinline{[b]} von \lstinline{map f xs} ist kein Funktionstyp,
+  kann nicht mit \lstinline{xs} aufgerufen werden.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun5}}
+  \begin{lstlisting}
+    fun5 a b c = (maximum [a..b], 3 * c)
+  \end{lstlisting}
+  \pause
+  Hilfestellung: Listenschreibweise \lstinline{[a..b]} ist über Typklasse \lstinline{Enum} definiert.
+  \pause
+  \begin{lstlisting}
+    :t fun5
+    fun5 ::
+      (Enum l, Ord l, Num n) =>
+      l -> l -> n -> (l, n)
+  \end{lstlisting}
+  \begin{itemize}
+  \item \lstinline{a} und \lstinline{b} müssen den gleichen Typ \lstinline{l} haben
+  \item Für \lstinline{[a..b]} muss \lstinline{Enum l} gelten
+  \item Für \lstinline{maximum [a..b]} muss \lstinline{Ord l} gelten
+  \item \lstinline{c} hat unabhängigen Typ \lstinline{n}
+  \item Für \lstinline{3 * c} muss \lstinline{Num n} gelten
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun6}}
+  \begin{lstlisting}
+    fun6 x y =
+      succ (toEnum (last [fromEnum x..fromEnum y]))
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    :t fun6
+    fun6 ::
+      (Enum s, Enum t, Enum u) =>
+      s -> t -> u
+  \end{lstlisting}
+  \lstinline{s}, \lstinline{t} und \lstinline{u} können unterschiedliche Typen sein,
+  weil sie durch \lstinline{fromEnum} und \lstinline{toEnum} voneinander entkoppelt sind.
+  Was \lstinline{u} (Rückgabetyp) ist, wird erst beim Aufruf festgelegt, vergleiche:
+  \begin{lstlisting}
+    Prelude> (toEnum 65) :: Char
+    'A'
+    Prelude> (toEnum 65) :: Int
+    65
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fun7}}
+  \begin{lstlisting}
+    fun7 x = if show x /= [] then x else error
+  \end{lstlisting}
+  \pause
+  Hilfestellung:
+  \begin{lstlisting}
+    show :: Show a => a -> String
+  \end{lstlisting}
+  \pause
+  Nicht typisierbar ohne Language Extension.
+  Alle Verzweigungen müssen den selben Typ zurückgeben,
+  und da \lstinline{error :: [Char] -> a} eine Funktion ist,
+  muss auch \lstinline{x} eine Funktion sein,
+  die aber für \lstinline{show x} gleichzeitig \lstinline{Show} erfüllen muss.
+  \begin{lstlisting}
+    fun7 ::
+      Show ([Char] -> a) =>
+      ([Char] -> a) -> [Char] -> a
+  \end{lstlisting}
+  \begin{quote}
+    Non type-variable argument in the constraint: \lstinline{Show ([Char] -> a)} \\
+    (Use FlexibleContexts to permit this)
+  \end{quote}
+\end{frame}
+
 \end{document}
