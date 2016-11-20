@@ -240,4 +240,27 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{eval}}
+  Gegeben ist ferner der Typ
+  \begin{lstlisting}
+    type Env t = t -> Integer
+  \end{lstlisting}
+  der eine \emph{Variablenumgebung} darstellt.
+  Definiere damit
+  \begin{lstlisting}
+    eval :: Env t -> Exp t -> Integer
+  \end{lstlisting}
+  um einen Ausdruck komplett auszuwerten.
+  \pause
+  \begin{lstlisting}
+    eval env (Var v) = env v
+    eval env (Const c) = c
+    eval env (Add e1 e2) = eval env e1 + eval env e2
+    eval env (And e1 e2) =
+      if eval env e1 /= 0 && eval env e2 /= 0
+      then 1 else 0
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
