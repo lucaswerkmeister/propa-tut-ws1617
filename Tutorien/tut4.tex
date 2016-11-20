@@ -371,4 +371,19 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{Tree}}
+  Datentyp für binäre Bäume:
+  \begin{lstlisting}
+    data Tree a = Leaf | Node (Tree a) a (Tree a)
+  \end{lstlisting}
+  Ein Baum ist \emph{sortiert}, wenn für jeden Knoten \lstinline{Node t1 x t2}
+  alle Elemente in \lstinline{t1} $≤$ \lstinline{x} und alle in \lstinline{t2} $≥$ \lstinline{x} sind.
+  
+  Wir definieren mehrere Operationen, die die Sortierung von Bäumen erhalten sollen,
+  allerdings auch für nicht sortierte oder nicht einmal sortierbare Bäume funktionieren sollen:
+  wir können also nicht Elemente vergleichen,
+  sondern dürfen uns nur auf die Invariante (sortierte Baumstruktur) verlassen.
+\end{frame}
+
 \end{document}
