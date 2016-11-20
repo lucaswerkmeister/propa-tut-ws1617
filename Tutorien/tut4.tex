@@ -263,4 +263,21 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{Show Exp}}
+  Definiere Instanz der Typklasse \lstinline{Show} für \lstinline{Exp},
+  um einen Ausdruck in Infix-Notation darzustellen.
+  Beispiel: \lstinline{show (Add (Const 1) (Const 2)) = "(1 + 2)"}
+  \pause
+  \begin{lstlisting}
+    instance Show t => Show (Exp t) where
+      show (Var v) = show v
+      show (Const c) = show c
+      show (Add e1 e2) =
+        "(" ++ show e1 ++ " + " ++ show e2 ++ ")"
+      show (And e1 e2) =
+        "(" ++ show e1 ++ " && " ++ show e2 ++ ")"
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
