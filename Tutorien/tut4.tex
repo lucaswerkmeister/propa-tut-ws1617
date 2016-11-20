@@ -225,4 +225,19 @@
   \end{quote}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Abstrakte Syntaxbäume}
+  Definiere Datentyp \lstinline{Exp t} für Ausdrücke.
+  Ein Ausdruck ist eine Variable, eine \lstinline{Integer}-Konstante, die Summe zweier Ausdrücke oder das logische Und zweier Ausdrücke (in C-Logik).
+  Der Typ von Variablennamen ist nicht spezifiziert, sondern über die Typvariable \lstinline{t} ausgelagert.
+  \pause
+  \begin{lstlisting}
+    data Exp t
+      = Var t
+      | Const Integer
+      | Add (Exp t) (Exp t)
+      | And (Exp t) (Exp t)
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
