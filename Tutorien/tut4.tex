@@ -401,4 +401,21 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{merge}}
+  \begin{lstlisting}
+    merge :: Tree a -> Tree a -> Tree a
+  \end{lstlisting}
+  fügt zwei Bäume zusammen.
+  Wenn beide Bäume sortiert sind und alle Elemente im ersten $≤$ alle im zweiten sind,
+  soll der Ergebnisbaum auch sortiert sein.
+  Hinweis: \lstinline{deleteMin} hilft!
+  \pause
+  \begin{lstlisting}
+    merge t1 Leaf = t1
+    merge t1 t2 = Node t1 x t2'
+      where (x, t2') = deleteMin t2
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
