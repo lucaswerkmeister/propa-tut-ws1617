@@ -237,7 +237,9 @@
       | Const Integer
       | Add (Exp t) (Exp t)
       | And (Exp t) (Exp t)
+      deriving Eq
   \end{lstlisting}
+  (\lstinline{deriving Eq} brauchen wir später zum Optimieren.)
 \end{frame}
 
 \begin{frame}[fragile]
