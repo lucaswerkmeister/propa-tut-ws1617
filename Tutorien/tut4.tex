@@ -437,6 +437,27 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Monaden}
+  Monaden sind „sehr cool“ und erlauben zum Beispiel die \lstinline{do}-Syntax:
+  \begin{lstlisting}
+    main = do
+      print "Was ist Ihr Name?"
+      name <- getLine
+      print ("Hallo, " ++ name)
+  \end{lstlisting}
+  Syntaktischer Zucker für:
+  \begin{lstlisting}
+    main =
+      print "Was ist Ihr Name?" >>
+      getLine >>= \name ->
+      print ("Hallo, " ++ name)
+  \end{lstlisting}
+  Die Operatoren \lstinline{>>=} (\emph{bind}) und \lstinline{>>} (\emph{then}) sind über die Typklasse \lstinline{Monad} definiert.
+  
+  Monaden sind aber \textbf{nicht klausurrelevant}!
+\end{frame}
+
 \begin{frame}
   \frametitle{Lambda-Kalkül}
   Sehr wenig Syntax: Klammerung, Applikation (Anwendung, „Aufruf“) durch Hintereinanderschreiben, Abstraktion mit Lambda.
