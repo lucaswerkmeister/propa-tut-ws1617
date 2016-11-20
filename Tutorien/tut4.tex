@@ -301,4 +301,30 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{simplify}}
+  Definiere
+  \begin{lstlisting}
+    simplify :: Exp t -> Exp t
+  \end{lstlisting}
+  um einen Ausdruck unter Ausnutzung algebraischer Identitäten,
+  etwa $x+0=0+x=x$ oder $x∧0=0∧x=0$,
+  zu optimieren.
+  \pause
+  \begin{lstlisting}
+    simplify' (Add e1 (Const 0)) = e1
+    simplify' (Add (Const 0) e2) = e2
+    simplify' (And e1 (Const 0)) = Const 0
+    simplify' (And (Const 0) e2) = Const 0
+    simplify' (And e1 (Const _)) = e1
+    simplify' (And (Const _) e2) = e2
+    
+    simplify (Add e1 e2) =
+      simplify' (Add (simplify e1) (simplify e2))
+    simplify (And e1 e2) =
+      simplify' (And (simplify e1) (simplify e2))
+    simplify x = x
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
