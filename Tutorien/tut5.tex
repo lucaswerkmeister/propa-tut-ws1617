@@ -203,4 +203,54 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{$λ$-Terme und ihre Typen}
+  Gegeben sind folgende $λ$-Terme:
+  \begin{align*}
+    A &= λ?f.~λ?x.~?f~?x \\
+    B &= λ?f.~λ?x.~?f~(?f~?x) \\
+    C &= λ?f.~(λ?x.~?f~(?x~?x))~(λ?x.~?f~(?x~?x)) \\
+    D &= λ?x.~λ?y.~?y~(?x~?y) \\
+    E &= λ?z.~?z \\
+    F &= D~E = (λ?x.~λ?y.~?y~(?x~?y))~(λ?z.~?z) \onslide<7->{\betareduce^\ast λ?y.~?y~?y}
+  \end{align*}
+  Trage jeden Term bei allen passenden Typen ein.
+  \begin{tabular}{l|l}
+    & ist Typ von Termen \\\hline
+    $α → α$                       & \onslide<6->{$E$} \\
+    $(α → α) → α → α$             & \onslide<2->{$A$}\onslide<3->{, $B$}\onslide<6->{, $E$} \\
+    $(α → β) → α → β$             & \onslide<2->{$A$}\onslide<6->{, $E$} \\
+    $((α → β) → α) → (α → β) → β$ & \onslide<5->{$D$} \\
+    nicht typisierbar             & \onslide<4->{$C$}\onslide<8->{, $F$}
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \frametitle{$λ$-Terme und ihre Typen}
+  \begin{align*}
+    D &= λ?x.~λ?y.~?y~(?x~?y) \quad &&:: ((α → β) → α) → (α → β) → β \\
+    E &= λ?z.~?z \quad &&:: α → α \\
+  \end{align*}
+  $D~E$ ist nicht typisierbar, denn dazu müssten Parameter- und Argumenttyp übereinstimmen, also:
+  \begin{align*}
+    α → α &= (α → β) → α \\
+    α &= α → β \\
+    &= (α → β) → β \\
+    &= ((α → β) → β) → β \\
+    &=\dots
+  \end{align*}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{$λ$-Terme und ihre Typen}
+  In Haskell gibt es dementsprechend für
+  \begin{lstlisting}
+    f = (\x -> \y -> y (x y)) (\z -> z)
+  \end{lstlisting}
+  auch den Fehler:
+  \begin{quote}
+    cannot construct the infinite type: \lstinline{t ~ t -> t1}
+  \end{quote}
+\end{frame}
+
 \end{document}
