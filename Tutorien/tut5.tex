@@ -143,4 +143,21 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{\vl{next}-Beweis}
+  Zeige, dass $\vl{next}~(\vl{pair}~n~m)$ zu $\vl{pair}~m~(\vl{succ}~m)$ reduziert.
+  \pause
+  \begin{align*}
+    \vl{next}~(\vl{pair}~n~m)
+    \onslide<3->{&\betareduce^\past \vl{pair}~(\vl{snd}~(\vl{pair}~n~m))~(\vl{succ}~(\vl{snd}~(\vl{pair}~n~m)))} \\
+    \onslide<4->{&\betareduce^\ast \vl{pair}~m~(\vl{succ}~(\vl{snd}~(\vl{pair}~n~m)))} \\
+    \onslide<5->{&\betareduce^\ast \vl{pair}~m~(\vl{succ}~m)}
+  \end{align*}
+  \pause[6]%
+  (Informelle Richtlinie für die Klausur:
+  die einzigen $β$-Reduktionsschritte, die abgekürzt werden sollten,
+  sind solche, die bereits gezeigt wurden~($\betareduce^\ast$),
+  sowie solche, bei denen nur mehrere direkt hintereinander stehende $λ$s eingesetzt werden~(z.\,B.~$\betareduce^3$ bei drei~$λ$s).)
+\end{frame}
+
 \end{document}
