@@ -70,3 +70,19 @@
       {\color{#1}\underline{{\color{black}#2}}\color{black}}%
       {\transparent{0.0}\underline{{\transparent{1.0}#2}}\transparent{1.0}}%
 }
+
+% \lambdavar is defined in the custom package
+\newcommand{\lambdaval}[1]{\ensuremath{\mathit{#1}}}
+\newcommand{\vr}[1]{\lambdavar{#1}}
+\newcommand{\vl}[1]{\lambdaval{#1}}
+
+% ?x means \vr{x} in math mode
+\let\qm=?
+\catcode`?=13
+\def?{%
+  \ifmmode%
+  \expandafter\vr%
+  \else%
+  \qm%
+  \fi%
+}
