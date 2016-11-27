@@ -12,4 +12,20 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Church-Zahlen}
+  \begin{align*}
+    0 &= 0 \\
+    1 &= 1 + 0 \\
+    2 &= 1 + 1 + 0 \\
+    3 &= 1 + 1 + 1 + 0 \\
+    \\
+    c_0 &= λs.~λz.~z \\
+    c_1 &= λs.~λz.~s~z \\
+    c_2 &= λs.~λz.~s~s~z \\
+    c_3 &= λs.~λz.~s~s~s~z
+  \end{align*}
+  Die Church-Zahl für $n∈ℕ$ besteht daraus, dass die Nachfolgerfunktion~$s$ $n$~mal auf das Nullelement~$z$ angewendet wird.
+\end{frame}
+
 \end{document}
