@@ -132,4 +132,15 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{\vl{next}}
+  \vl{next} soll aus Paar $(n,m)$ das Paar $(m, m+1)$ berechnen (alles in Church-Darstellung).
+  \pause
+  \begin{align*}
+    \vl{next} &= λ?p.~\vl{pair}~(\vl{snd}~?p)~(\vl{succ}~(\vl{snd}~?p))
+    \intertext{oder:}
+    \vl{next} &= λ?p.~(λ?m.~\vl{pair}~?m~(\vl{succ}~?m))~(\vl{snd}~?p)
+  \end{align*}
+\end{frame}
+
 \end{document}
