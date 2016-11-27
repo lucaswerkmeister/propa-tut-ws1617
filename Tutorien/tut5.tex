@@ -160,4 +160,12 @@
   sowie solche, bei denen nur mehrere direkt hintereinander stehende $λ$s eingesetzt werden~(z.\,B.~$\betareduce^3$ bei drei~$λ$s).)
 \end{frame}
 
+\begin{frame}
+  \frametitle{\vl{pred}}
+  Verwende \vl{next}, um Vorgängerfunktion \vl{pred} für Church-Zahlen anzugeben.
+  \textbf{Hinweis:} $n$-malige Anwendung von \vl{next} auf das Paar $(0,0)$ liefert $(n-1,n)$.
+  \pause
+  \[\vl{pred} = λ?n.~\vl{fst}~(?n~\vl{next}~(\vl{pair}~c_0~c_0))\]
+\end{frame}
+
 \end{document}
