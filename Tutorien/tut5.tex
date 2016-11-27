@@ -185,4 +185,22 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{\vl{sub}}
+  Definiere Substraktionsfunktion \vl{sub}, die zwei Church-Zahlen voneinander abzieht.
+  \pause
+  \[\vl{sub} = λ?m.~λ?n.~?n~\vl{pred}~?m\]
+  \pause
+  Was ist die $β$-Normalform von $\vl{sub}~c_2~c_1$?
+  \pause
+  \begin{align*}
+    \vl{sub}~c_2~c_1
+    \onslide<5->{&=^\past (λ?m.~λ?n.~?n~\vl{pred}~?m)~c_2~c_1} \\
+    \onslide<6->{&\betareduce^2 c_1~\vl{pred}~c_2} \\
+    \onslide<7->{&=^\past (λ?s.~λ?z.~?s~?z)~\vl{pred}~c_2} \\
+    \onslide<8->{&\betareduce^2 \vl{pred}~c_2} \\
+    \onslide<9->{&\betareduce^\ast c_1}
+  \end{align*}
+\end{frame}
+
 \end{document}
