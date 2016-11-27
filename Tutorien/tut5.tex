@@ -312,4 +312,88 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Typprüfung, Herleitungsbäume}
+  Herleitungsbäume sind eine Schreibweise, um einen Beweis / seine Herleitung aufzuschreiben.
+  Sie sehen aus wie ein Bruch;
+  oben stehen bekanntermaßen wahre Tatsachen,
+  unten die Schlussfolgerungen, die aus den oberen Tatsachen folgen.
+  Die Tatsachen können selbst Herleitungen sein, daraus ergibt sich ein Baum.
+  
+  Damit kann zum Beispiel das logische Und, $∧$, so beschrieben werden:
+  \begin{itemize}
+  \item
+    Wenn $a$ gilt, und auch $b$ gilt, dann gilt auch $a ∧ b$. (Introduktion)
+    \begin{prooftree}
+      \AxiomC{$a$} \AxiomC{$b$}
+      \rulename{I}\BinaryInfC{$a ∧ b$}
+    \end{prooftree}
+  \item
+    Wenn $a ∧ b$ gilt, dann gilt auch $a$. (Elimination)
+    \begin{prooftree}
+      \AxiomC{$a ∧ b$}
+      \rulename{E1}\UnaryInfC{$a$}
+    \end{prooftree}
+  \item
+    Wenn $a ∧ b$ gilt, dann gilt auch $b$. (Elimination)
+    \begin{prooftree}
+      \AxiomC{$a ∧ b$}
+      \rulename{E2}\UnaryInfC{$a$}
+    \end{prooftree}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung, Herleitungsbäume}
+  Damit kann zum Beispiel die Assoziativität von $∧$,
+  also die Aussage $(a ∧ b) ∧ c \Rightarrow a ∧ (b ∧ c)$,
+  bewiesen werden.
+  \begin{prooftree}
+    \AxiomC{$(a∧b)∧c$}
+    \rulename{E1}\UnaryInfC{$a∧b$}
+    \rulename{E1}\UnaryInfC{$a$}
+    \AxiomC{$(a∧b)∧c$}
+    \rulename{E1}\UnaryInfC{$a∧b$}
+    \rulename{E2}\UnaryInfC{$b$}
+    \AxiomC{$(a∧b)∧c$}
+    \rulename{E2}\UnaryInfC{$c$}
+    \rulename{E}\BinaryInfC{$b∧c$}
+    \rulename{E}\BinaryInfC{$a∧(b∧c)$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung, Herleitungsbäume}
+  Zur Typprüfung gibt es noch etwas mehr Schreibweise:
+  \begin{prooftree}
+    \AxiomC{$a$}\AxiomC{$b$}\AxiomC{$c$}
+    \TrinaryInfC{$Γ \vdash t : τ$}
+  \end{prooftree}
+  Wenn $a$, $b$ und $c$ gelten,
+  hat der Ausdruck $t$ in der Umgebung $Γ$ den Typ $τ$.
+  $Γ$ weist dabei ungebundenen Variablen ihren Typ zu.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung, Herleitungsbäume}
+  Typprüfung hat die folgenden Regeln:
+  \begin{prooftree}
+    \AxiomC{$c ∈ \vl{Const}$}
+    \rulename{Const}\UnaryInfC{$Γ \vdash c : τ_c$}
+  \end{prooftree}
+  \begin{prooftree}
+    \AxiomC{$Γ(x) = τ$}
+    \rulename{Var}\UnaryInfC{$Γ \vdash x : τ$}
+  \end{prooftree}
+  \begin{prooftree}
+    \AxiomC{$Γ, x : τ_1 \vdash t : τ_2$}
+    \rulename{Abs}\UnaryInfC{$Γ \vdash λx.~t : τ_1 → τ_2$}
+  \end{prooftree}
+  \begin{prooftree}
+    \AxiomC{$Γ \vdash t_1 : τ_2 → τ$}
+    \AxiomC{$Γ \vdash t_2 : τ_2$}
+    \rulename{App}\BinaryInfC{$Γ \vdash t_1~t_2 : τ$}
+  \end{prooftree}
+\end{frame}
+
 \end{document}
