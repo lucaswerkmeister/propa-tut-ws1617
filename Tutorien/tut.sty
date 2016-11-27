@@ -6,6 +6,7 @@
 \usepackage{lstautogobble} % automatically unindent lstlistings
 \usepackage{multicol} % multicol environment
 \usepackage{upgreek} % uppercase greek letters
+\usepackage{transparent} % TODO
 
 \DeclareUnicodeCharacter{393}{\Gamma} % Γ
 \DeclareUnicodeCharacter{398}{\Theta} % Θ
@@ -44,3 +45,28 @@
 \title[\tiny \copyright 2013 by IPD Snelting -- Programmierparadigmen]{Programmierparadigmen \\ Tutorium: \tuttitle}
 \subtitle{\url{https://lucaswerkmeister.de/tut}}
 \author{Lucas Werkmeister}
+
+% https://github.com/d3/d3-scale/blob/master/README.md#schemeCategory10
+\definecolor{c1}{HTML}{1f77b4}
+\definecolor{c2}{HTML}{ff7f0e}
+\definecolor{c3}{HTML}{2ca02c}
+\definecolor{c4}{HTML}{d62728}
+\definecolor{c5}{HTML}{9467bd}
+\definecolor{c6}{HTML}{8c564b}
+\definecolor{c7}{HTML}{e377c2}
+\definecolor{c8}{HTML}{7f7f7f}
+\definecolor{c9}{HTML}{bcbd22}
+\definecolor{c10}{HTML}{17becf}
+
+% colored underline, with Beamer overlay support
+% usage: \cul{x} or \cul[blue]{x} or \cul<2->{x} or \cul<2->[blue]{x}
+\newcommand<>{\cul}[2][red]{%
+  % change underline dimentions: https://tex.stackexchange.com/a/167957/25264
+  \fontdimen8\textfont3=0.75pt%
+  % colored underline: https://tex.stackexchange.com/a/9477/25264
+  % transparent underline: https://tex.stackexchange.com/a/45601/25264
+  % switch between colored and transparent: http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/beamer/doc/beameruserguide.pdf sections 9.3 and 9.6.1
+  \alt#3%
+      {\color{#1}\underline{{\color{black}#2}}\color{black}}%
+      {\transparent{0.0}\underline{{\transparent{1.0}#2}}\transparent{1.0}}%
+}
