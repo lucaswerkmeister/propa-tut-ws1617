@@ -168,4 +168,21 @@
   \[\vl{pred} = λ?n.~\vl{fst}~(?n~\vl{next}~(\vl{pair}~c_0~c_0))\]
 \end{frame}
 
+\begin{frame}
+  \frametitle{$\vl{pred}~c_2$}
+  Berechne $\vl{pred}~c_2$ per Beta-Reduktion.
+  \pause
+  \begin{align*}
+    \vl{pred}~c_2
+    \onslide<3->{&=^\past (λ?n.~\vl{fst}~(?n~\vl{next}~(\vl{pair}~c_0~c_0)))~c_2} \\
+    \onslide<4->{&\betareduce^\past \vl{fst}~(c_2~\vl{next}~(\vl{pair}~c_0~c_0))} \\
+    \onslide<5->{&=^\past \vl{fst}~((λ?s.~λ?z.~?s~(?s~?z))~\vl{next}~(\vl{pair}~c_0~c_0))} \\
+    \onslide<6->{&\betareduce^2 \vl{fst}~(\vl{next}~(\vl{next}~(\vl{pair}~c_0~c_0)))} \\
+    \onslide<7->{&\betareduce^\ast \vl{fst}~(\vl{next}~(\vl{pair}~c_0~(\vl{succ}~c_0)))} \\
+    \onslide<8->{&\betareduce^\ast \vl{fst}~(\vl{pair}~(\vl{succ}~c_0)~(\vl{succ}~(\vl{succ}~c_0)))} \\
+    \onslide<9->{&\betareduce^\ast \vl{succ}~c_0} \\
+    \onslide<10->{&\betareduce^\ast c_1}
+  \end{align*}
+\end{frame}
+
 \end{document}
