@@ -62,4 +62,23 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{church2int}}
+  \begin{lstlisting}
+    church2int :: Church Integer -> Integer
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    church2int c = c (1+) 0
+  \end{lstlisting}
+  Damit ist
+  \begin{lstlisting}
+    church2int c3
+      = (\s z ->  s   ( s   ( s     z)))  (1+)  0
+      =          (1+) ((1+) ((1+)   0))
+      =           1  +  1  +  1  +  0
+      = 3
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
