@@ -28,4 +28,20 @@
   Die Church-Zahl für $n∈ℕ$ besteht daraus, dass die Nachfolgerfunktion~$s$ $n$~mal auf das Nullelement~$z$ angewendet wird.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Church-Zahlen in Haskell}
+  Der Typ einer Church-Zahl in Haskell ist:
+  \begin{lstlisting}
+    type Church t = (t -> t) -> t -> t
+    ----               s        z
+  \end{lstlisting}
+  Definiere
+  \begin{lstlisting}
+    int2church :: Integer -> Church t
+    church2int :: Church Integer -> Integer
+  \end{lstlisting}
+  um von und zu gewöhnlichen Zahlen zu konvertieren.
+  (\lstinline{church2int} geht ohne Rekursion.)
+\end{frame}
+
 \end{document}
