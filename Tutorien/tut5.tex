@@ -102,4 +102,18 @@
   ($t_2$ ist schon ein Wert).
 \end{frame}
 
+\begin{frame}
+  \frametitle{Church-Paare}
+  Das Paar $(a,b)$ kann im Lambda-Kalkül so dargestellt werden:
+  \[λ?f.~?f~a~b\]
+  Damit ist der Paar-Konstruktor \vl{pair}:
+  \[\vl{pair} = λ?a.~λ?b.~λ?f.~?f~?a~?b\]
+  Wie in Haskell sollen Funktionen \vl{fst}, \vl{snd} erstes und zweites Element extrahieren.
+  Dabei ist \vl{fst}:
+  \[\vl{fst} = λ?p.~?p~(λ?a.~λ?b.~?a)\]
+  Definiere \vl{snd}.
+  \pause
+  \[\vl{snd} = λ?p.~?p~(λ?a.~λ?b.~?b)\]
+\end{frame}
+
 \end{document}
