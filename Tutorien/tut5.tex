@@ -253,4 +253,63 @@
   \end{quote}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Rekursion}
+  Für eine beliebige Zahlenkodierung seien die Operationen \vl{isZero}, \vl{succ}, \vl{pred} gegeben.
+  Damit lässt sich eine \vl{add}-Funktion formulieren wie folgt:
+  \begin{lstlisting}
+    add 0 n = n
+    add m n = add (pred m) (succ n)
+  \end{lstlisting}
+  Wie kann diese Funktion im Lambda-Kalkül umgesetzt werden?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rekursion}
+  Erster Ansatz:
+  \[\vl{add} = λ?m.~λ?n.~(\vl{isZero}~?m)~?n~(\vl{add}~(\vl{pred}~?m)~(\vl{succ}~?n))\]
+  Allerdings kann man diesen Term nicht vollständig hinschreiben, da er seine eigene Definition rekursiv enthält.
+  \pause
+  
+  Wenn wir nur Zahlen bis einschließlich 2 addieren wollen,
+  können wir den Term dreimal in sich selbst einsetzen,
+  und dann ein beliebiges Lambda (z.\,B. $λ?x.~?x$) für \vl{add} einsetzen.
+  Wenn alle Eingabezahlen $\leq2$ sind,
+  wird die Rekursion höchstens dreimal ausgeführt,
+  und unser „Ersatz-\vl{add}“ wird nie benötigt.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rekursion}
+  \[\vl{add} = λ?m.~λ?n.~(\vl{isZero}~?m)~?n~(\vl{add}~(\vl{pred}~?m)~(\vl{succ}~?n))\]
+  Wenn wir beliebig große Zahlen addieren wollen,
+  müssten wir dazu \vl{add} unendlich oft in sich selbst einsetzen.
+  Das Ergebnis wäre ein unendlich großer Ausdruck:
+  ein \emph{Fixpunkt} der Operation „setze \vl{add} in seine eigene Definition ein“.
+  \pause
+  
+  Einen solchen Fixpunkt liefert uns auch ein Fixpunkt-Kombinator, etwa $Y$.
+  Durch „lazy evaluation“ (Call-By-Name) bauen wir nie den unendlich großen Ausdruck auf,
+  sondern machen ihn immer nur so groß, wie nötig.
+  Damit definieren wir:
+  \begin{align*}
+    \vl{Add} &= λ\vl{add}.~λ?m.~λ?n.~(\vl{isZero}~?m)~?n~(\vl{add}~(\vl{pred}~?m)~(\vl{succ}~?n)) \\
+    \vl{add} &= Y~\vl{Add}
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rekursion}
+  \begin{align*}
+    \intertext{Y ist wie folgt definiert:}
+    Y &= λ?f.~(λ?x.~?f~(?x~?x))~(λ?x.~?f~(?x~?x))
+    \intertext{und hat die Eigenschaft:}
+    Y~f &= f~(Y~f)
+    \intertext{für \vl{add} gilt also:}
+    \vl{add} &= Y~\vl{Add} \\
+    &= \vl{Add}~(Y~\vl{Add}) \\
+    &= \vl{Add}~\vl{add}
+  \end{align*}
+\end{frame}
+
 \end{document}
