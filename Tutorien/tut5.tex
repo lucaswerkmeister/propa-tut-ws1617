@@ -44,4 +44,22 @@
   (\lstinline{church2int} geht ohne Rekursion.)
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\lstinline{int2church}}
+  \begin{align*}
+    c_0 &= λs.~λz.~z \\
+    c_n &= λs.~λz.~\underbrace{s~(s~(\ldots~s}_{\text{$n$ mal}}~z))
+  \end{align*}
+  \begin{lstlisting}
+    int2church :: Integer -> Church t
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    int2church 0 = \s z -> z
+    int2church n = \s z -> int2church (n-1) s (s z)
+    -- oder
+    int2church n = \s z -> s (int2church (n-1) s z)
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
