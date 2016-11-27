@@ -81,4 +81,25 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Redexe, Auswertungsstrategie}
+  Markiere alle Redexe.
+  Welcher wird unter Normal(en)reihenfolge, Call-By-Name und Call-By-Value jeweils zuerst reduziert?
+  \pause
+  \begin{align*}
+    t_1 &= (\cul<3->[c1]{λt.}~λf.~f)~\cul<3->[c1]{((\cul<3->[c2]{λy.}~(\cul<3->[c3]{λx.}~x~x)~\cul<3->[c3]{(λx.~x~x)})~\cul<3->[c2]{((\cul<3->[c4]{λx.}~x)~\cul<3->[c4]{(λx.~x)})})}~(λt.~λf.~f)
+  \end{align*}
+  \pause[4]%
+  Normalreihenfolge und Call-By-Name werten \textcolor{c1}{blau} zuerst aus,
+  Call-By-Value wertet \textcolor{c4}{rot} zuerst aus.
+  \pause
+  \begin{align*}
+    t_2 &= λy.~(\cul<6->[c1]{λz.}~(\cul<6->[c2]{λx.}~x)~\cul<6->[c2]{(λx.~x)}~z)~\cul<6->[c1]{y}
+  \end{align*}
+  \pause[7]%
+  Normalenreihenfolge wertet \textcolor{c1}{blau} zuerst aus,
+  Call-By-Value und Call-By-Name machen nichts
+  ($t_2$ ist schon ein Wert).
+\end{frame}
+
 \end{document}
