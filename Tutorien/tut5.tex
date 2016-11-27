@@ -116,4 +116,20 @@
   \[\vl{snd} = λ?p.~?p~(λ?a.~λ?b.~?b)\]
 \end{frame}
 
+\begin{frame}
+  \frametitle{Church-Paare}
+  Zeige durch Beta-Reduktion mit Call-By-Name:
+  \[\vl{fst}~(\vl{pair}~a~b) \betareduce^\ast a\]
+  \pause
+  \begin{align*}
+    \vl{fst}~(\vl{pair}~a~b) &= (λ?p.~?p~(λ?a.~λ?b.~?a))~((λ?a.~λ?b.~λ?f.~?f~?a~?b)~a~b) \\
+    \onslide<3->{&\betareduce (λ?a.~λ?b.~λ?f.~?f~?a~?b)~a~b~(λ?a.~λ?b.~?a)} \\
+    \onslide<4->{&\betareduce (λ?b.~λ?f.~?f~a~?b)~b~(λ?a.~λ?b.~?a)} \\
+    \onslide<5->{&\betareduce (λ?f.~?f~a~b)~(λ?a.~λ?b.~?a)} \\
+    \onslide<6->{&\betareduce (λ?a.~λ?b.~?a)~a~b} \\
+    \onslide<7->{&\betareduce (λ?b.~a)~b} \\
+    \onslide<8->{&\betareduce a}
+  \end{align*}
+\end{frame}
+
 \end{document}
