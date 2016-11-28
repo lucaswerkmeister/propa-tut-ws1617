@@ -338,7 +338,7 @@
     Wenn $a ∧ b$ gilt, dann gilt auch $b$. (Elimination)
     \begin{prooftree}
       \AxiomC{$a ∧ b$}
-      \rulename{E2}\UnaryInfC{$a$}
+      \rulename{E2}\UnaryInfC{$b$}
     \end{prooftree}
   \end{itemize}
 \end{frame}
@@ -357,8 +357,8 @@
     \rulename{E2}\UnaryInfC{$b$}
     \AxiomC{$(a∧b)∧c$}
     \rulename{E2}\UnaryInfC{$c$}
-    \rulename{E}\BinaryInfC{$b∧c$}
-    \rulename{E}\BinaryInfC{$a∧(b∧c)$}
+    \rulename{I}\BinaryInfC{$b∧c$}
+    \rulename{I}\BinaryInfC{$a∧(b∧c)$}
   \end{prooftree}
 \end{frame}
 
