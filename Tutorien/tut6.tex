@@ -254,4 +254,75 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Let-Polymorphismus}
+  Wir wollen den folgenden Ausdruck typisieren:
+  \[λ?g.~?g~(f~1)~(f~\xtrue)\]
+  Dabei sei $f=λ?x.~?x$.
+  
+  \pause
+  Intuitiv sehen wir: $f$ ist die Identitätsfunktion,
+  also hat $f~1$ den Typ $\Tint$ und $f~\xtrue$ den Typ $\Tbool$.
+  Damit sollte der ganze Ausdruck den Typ $(\Tint → \Tbool → α) → α$ haben.
+  
+  \pause
+  Was ist hierbei aber der Typ von $f$?\ 
+  Erster Ansatz:
+  \[(λ?f.~λ?g.~?g~(?f~1)~(?f~\xtrue))~(λ?x.~?x)\]
+  Dabei hat in $λ?g.~?g~(?f~1)~(?f~\xtrue)$ $?f$ den Typ $α → α$.
+  Damit ist der Ausdruck aber nicht typisierbar, denn $α$ kann nicht gleichzeitig $\Tint$ und $\Tbool$ sein!
+\end{frame}
+
+\begin{frame}
+  \frametitle{Let-Polymorphismus}
+  Stattdessen:
+  \[\Let ?f = λ?x.~?x \In λ?g.~?g~(?f~1)~(?f~\xtrue)\]
+  Jetzt hat $?f$ innerhalb von $λ?g.~?g~(?f~1)~(?f~\xtrue)$ den Typ:
+  \[∀α. α → α\]
+  \pause
+  Unterschied zu $α → α$:
+  Ohne $∀$ ist $α$ eine von außen vorgegebene Typvariable,
+  die für \emph{einen} Typ steht.
+  Wir garantieren der Umgebung, dass wir für beliebige Belegung von $α$ funktionieren.
+  Mit $∀$ dürfen wir $α$ \emph{selbst} frei wählen, beliebig oft,
+  und die Umgebung garantiert \emph{uns},
+  dass die Funktion vom Typ $∀ α. α → α$ für beliebige (von uns gewählte) Belegung von $α$ funktioniert.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Let-Polymorphismus}
+  Das gleiche gibt es übrigens auch in Haskell.
+  Normalerweise ist diese Funktion nicht typisierbar:
+  \begin{lstlisting}
+    x f g = g (f 1) (f True)
+  \end{lstlisting}
+  Mit einer Language Extension wie \emph{Rank2Types} oder \emph{RankNTypes} können wir allerdings einen gültigen Typ angeben:
+  \begin{lstlisting}
+    x :: (forall a. a -> a) -> (Int -> Bool -> a) -> a
+  \end{lstlisting}
+  Die Funktion kann dann zum Beispiel mit \lstinline{id} aufgerufen werden:
+  die freie Typvariable in \lstinline{a -> a} wird implizit allquantifiziert
+  (\lstinline{id} hat implizit den Typ \lstinline{forall a. a -> a}).
+  Im Lambda-Kalkül geschieht das nicht, dort muss man explizit \lstinline{let} verwenden.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Let-Polymorphismus}
+  Änderungen an den Typisierungsregeln:
+  \begin{description}
+  \item[Var] erlaubt Instanziierungen. Zum Beispiel kann aus $Γ(x) = ∀ α. α → α$ der Typ $Γ \vdash x : \Tint → \Tint$ instanziiert werden, da $∀ α. α → α \succeq \Tint → \Tint$.
+  \item[Abs] fordert, dass der Parametertyp kein Typschema ist.
+  \item[Let] neue Regel:
+    \begin{prooftree}
+      \AxiomC{$Γ \vdash t_1 : τ_1$}
+      \AxiomC{$Γ, ?x : \mathit{ta}(τ_1, Γ) \vdash t_2 : τ_2$}
+      \rulename{Let}
+      \BinaryInfC{$Γ \vdash \Let ?x = t_1 \In t_2 : τ_2$}
+    \end{prooftree}
+    Dabei hat $t_1$ einen normalen (nicht polymorphen) Typ, also mit freien Typvariablen, z.\,B. $α → β → α$.
+    $t_2$ darf die polymorphe Version davon nutzen, hier z.\,B. $∀ α. ∀ β. α → β → α$.
+    Das \lstinline{let}-Konstrukt schafft den Übergang zwischen den beiden Ausdrücken.
+  \end{description}
+\end{frame}
+
 \end{document}
