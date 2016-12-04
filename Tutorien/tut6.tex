@@ -202,4 +202,56 @@
   \[\vl{foo} = λ\vr{n}.~(\vl{less\_eq}~\vr{n}~c_{100})~c_{91}~(\vl{sub}~\vr{n}~c_{10})\]
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Rekursionsoperator in Haskell}
+  $Y$ ist in Haskell nicht typisierbar.
+  Es lässt sich aber ein anderer Rekursionsoperator definieren:
+  \begin{lstlisting}
+    fix :: (t -> t) -> t
+    fix f = f (fix f)
+  \end{lstlisting}
+  (Findet sich so auch im Modul \lstinline{Data.Function}.)
+  
+  Definiere damit
+  \begin{lstlisting}
+    fibF :: (Integer -> Integer) -> (Integer -> Integer)
+    fooF :: (Integer -> Integer) -> (Integer -> Integer)
+  \end{lstlisting}
+  sodass \lstinline{fix fibF}, \lstinline{fix fooF} die gewünschten Funktionen ergeben.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fibF}}
+  \begin{lstlisting}
+    fib      :: Integer -> Integer
+    fib      0 = 1
+    fib      1 = 1
+    fib      n = fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    fibF :: (Integer -> Integer) -> (Integer -> Integer)
+    fibF _   0 = 1
+    fibF _   1 = 1
+    fibF fib n = fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fooF}}
+  \begin{lstlisting}
+    foo :: Integer -> Integer
+    foo     n
+      | n <= 100  = foo (foo (n + 11))
+      | otherwise = n - 10
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    fooF :: (Integer -> Integer) -> (Integer -> Integer)
+    fooF foo n
+      | n <= 100  = foo (foo (n + 11))
+      | otherwise = n - 10
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
