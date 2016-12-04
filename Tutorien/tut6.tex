@@ -151,4 +151,55 @@
   \[\vl{fib} = Y~\vl{Fib}\]
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\vl{foo}}
+  Übersetze folgende Haskell-Funktion in $λ$-Kalkül:
+  \begin{lstlisting}
+    foo :: Integer -> Integer
+    foo n
+      | n <= 100  = foo (foo (n + 11))
+      | otherwise = n - 10
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\vl{foo}}
+  \begin{lstlisting}
+    foo n = if n <= 100
+            then foo (foo (n + 11))
+            else n - 10
+  \end{lstlisting}
+  Funktional:
+  \pause
+  \begin{lstlisting}
+    Foo = \foo -> \n -> if n <= 100
+                        then foo (foo (n + 11))
+                        else n - 10
+  \end{lstlisting}
+  Funktional im Lambda-Kalkül:
+  \pause
+  \begin{align*}
+    \vl{Foo} = λ\vr{foo}.~λ\vr{n}.~&(\vl{less\_eq}~\vr{n}~c_{100})\\
+    &(\vr{foo}~(\vr{foo}~(\vl{plus}~\vr{n}~c_{11})))\\
+    &(\vl{sub}~\vr{n}~c_{10})
+  \end{align*}
+  \vl{foo} im Lambda-Kalkül:
+  \pause
+  \[\vl{foo} = Y~\vl{Foo}\]
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\vl{foo}}
+  Laut Beispiellösung ist \lstinline{foo} übrigens „die bekannte McCarthy 91-Funktion“,
+  welche laut Wikipedia ein Standard-Testfall für formale Beweissysteme ist.
+  Ein Beweissystem soll dabei herausfinden, dass diese Funktion die folgende Eigenschaft besitzt:
+  \[\vl{foo}(n) = \begin{cases}91 & n \leq 100 \\ n - 10 & n > 100\end{cases}\]
+  Daher ist \lstinline{foo} „bekanntlich“ äquivalent zu folgender Definition:
+  \begin{lstlisting}
+    foo n = if n <= 100 then 91 else n - 10
+  \end{lstlisting}
+  Damit wäre auch folgende Übersetzung denkbar:
+  \[\vl{foo} = λ\vr{n}.~(\vl{less\_eq}~\vr{n}~c_{100})~c_{91}~(\vl{sub}~\vr{n}~c_{10})\]
+\end{frame}
+
 \end{document}
