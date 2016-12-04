@@ -79,4 +79,76 @@
   (Es gibt keine negativen Church-Zahlen, daher ist z.\,B. $\vl{sub}~c_3~c_5 \Rightarrow^\ast c_0$.)
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{\vl{fib}}
+  Übersetze folgende Haskell-Funktion in $λ$-Kalkül:
+  \begin{lstlisting}
+    fib :: Integer -> Integer
+    fib 0 = 1
+    fib 1 = 1
+    fib n = fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\vl{fib}}
+  \begin{lstlisting}
+    fib :: Integer -> Integer
+    fib 0 = 1
+    fib 1 = 1
+    fib n = fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+  Erster Schritt: \lstinline{fib} ohne Pattern Matching.
+  \pause
+  \begin{lstlisting}
+    fib n = if n == 0 || n == 1
+            then 1
+            else fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\vl{fib}}
+  \begin{lstlisting}
+    fib n = if n == 0 || n == 1
+            then 1
+            else fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+  Zweiter Schritt: zugehöriges Funktional (also ohne Rekursion) in Haskell.
+  \pause
+  \begin{lstlisting}
+    Fib = \fib -> \n -> if n == 0 || n == 1
+                        then 1
+                        else fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\vl{fib}}
+  \begin{lstlisting}
+    Fib = \fib -> \n -> if n == 0 || n == 1
+                        then 1
+                        else fib (n - 1) + fib (n - 2)
+  \end{lstlisting}
+  Dritter Schritt: \lstinline{Fib} im Lambda-Kalkül.
+  \pause
+  \begin{align*}
+    \vl{Fib} = λ\vr{fib}.~λ\vr{n}.~&(\vl{is\_zero}~(\vl{pred}~\vr{n}))\\
+    &c_1\\
+    &(\vl{plus}~(\vr{fib}~(\vl{sub}~\vr{n}~c_1))~(\vr{fib}~(\vl{sub}~\vr{n}~c_2)))
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\vl{fib}}
+  \begin{align*}
+    \vl{Fib} = λ\vr{fib}.~λ?n.~&(\vl{is\_zero}~(\vl{pred}~?n))\\
+    &c_1\\
+    &(\vl{plus}~(\vr{fib}~(\vl{sub}~?n~c_1))~(\vr{fib}~(\vl{sub}~?n~c_2)))
+  \end{align*}
+  Vierter Schritt: \vl{fib} definieren.
+  \pause
+  \[\vl{fib} = Y~\vl{Fib}\]
+\end{frame}
+
 \end{document}
