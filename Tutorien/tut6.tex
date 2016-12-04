@@ -12,4 +12,41 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Turing-Kombinator}
+  Turing fand folgenden Fixpunktkombinator:
+  \[Θ = (λ?x.~λ?y.~?y~(?x~?x~?y))~(λ?x.~λ?y.~?y~(?x~?x~?y))\]
+  Zeige per $β$-Reduktion, dass gilt:
+  \[Θ~F \Rightarrow^\ast F~(Θ~F)\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Turing-Kombinator}
+  Zur Abkürzung sei
+  \begin{align*}
+    Θ_0 &:= (λ?x.~λ?y.~?y~(?x~?x~?y))
+    \intertext{Damit ist also}
+    Θ &= Θ_0~Θ_0
+    \intertext{und damit}
+    Θ~F &= \onslide<2->{Θ_0~Θ_0~F} \\
+    \onslide<3->{&= (λ?x.~λ?y.~?y~(?x~?x~?y))~Θ_0~F} \\
+    \onslide<4->{&\Rightarrow (λ?y.~?y~(Θ_0~Θ_0~?y))~F} \\
+    \onslide<5->{&\Rightarrow F~(Θ_0~Θ_0~F)} \\
+    \onslide<6->{&= F~(Θ~F)}
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Turing-Kombinator}
+  Der Turing-Kombinator ist auch ein allgemeineres Rezept, um eine rekursive Gleichung zu erfüllen.
+  Wollen wir etwa einen Kombinator für
+  \begin{align*}
+    Ξ~F &\Rightarrow^* F~(λ?g.~F~(Ξ~F~(F~Ξ)~?g))
+    \intertext{so definieren wir}
+    Ξ &= Ξ_0~Ξ_0
+    \intertext{und definieren dann $Ξ_0$, indem wir $x$ ($Ξ_0$) und $y$ ($F$) als Parameter annehmen und dann die Rekursionsgleichung abschreiben, mit $?x~?x$ statt $Ξ$ und $?y$ statt $F$:}
+    Ξ_0 &:= λ?x~λ?y.~?y~(λ?g.~?y~(?x~?x~?y~(?y~(?x~?x))~?g))
+  \end{align*}
+\end{frame}
+
 \end{document}
