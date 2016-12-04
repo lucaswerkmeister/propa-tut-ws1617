@@ -325,4 +325,134 @@
   \end{description}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Typprüfung}
+  Gegeben
+  \[Γ = ?a: \Tint, ?b: \Tbool, ?c: \Tchar\]
+  soll unter Verwendung der folgenden Instanziierungen
+  \begin{align*}
+    & ∀α. ∀β. α → β → α \succeq \Tint → \Tbool → \Tint \\
+    & ∀α. ∀β. α → β → α \succeq \Tbool → \Tchar → \Tbool
+  \end{align*}
+  der folgende Herleitungsbaum vervollständigt werden:
+  
+  \begin{prooftree}
+    \small
+    \AxiomC{$Γ \vdash λ?x.~λ?y.~?x : α → β → α$}
+    \AxiomC{$Γ, ?k : ∀α. ∀β. α → β → α \vdash ?k~?a~(?k~?b~?c) : \Tint$}
+    \rulename{Let}
+    \BinaryInfC{$Γ \vdash \Let ?k = λ?x.~λ?y.~?x \In ?k~?a~(?k~?b~?c) : \Tint$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung}
+  Wir zeigen zunächst die linke Seite
+  \[Γ \vdash λ?x.~λ?y.~?x : α → β → α\]
+  durch mehrmalige Anwendung der Regel
+  \pause
+  \begin{prooftree}
+    \AxiomC{$Γ, ?x: τ_1 \vdash t: τ_2$}
+    \rulename{Abs}
+    \UnaryInfC{$Γ \vdash λ?x.~t: τ_1 → τ_2$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung}
+  \begin{prooftree}
+    \def\fCenter{(?x}
+    \Axiom$(Γ, ?x: α, ?y: β)\fCenter) = α$
+    \def\fCenter{\vdash}
+    \rulename{Var}
+    \UnaryInf$Γ, ?x:α, ?y:β \fCenter ?x: α$
+    \rulename{Abs}
+    \UnaryInf$Γ, ?x: α \fCenter λ?y.~?x : β → α$
+    \rulename{Abs}
+    \UnaryInf$Γ \fCenter λ?x.~λ?y.~?x : α → β → α$
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung}
+  Jetzt zeigen wir die rechte Seite
+  \[Γ, ?k : \underbrace{∀α. ∀β. α → β → α}_{ξ} \vdash ?k~?a~(?k~?b~?c) : \Tint\]
+  mit der Regel
+  \pause
+  \begin{prooftree}
+    \AxiomC{$Γ \vdash t_1: τ_2 → τ$}
+    \AxiomC{$Γ \vdash t_2: τ_2$}
+    \rulename{App}
+    \BinaryInfC{$Γ \vdash t_1~t_2: τ$}
+  \end{prooftree}
+  also
+  \begin{prooftree}
+    \AxiomC{$Γ, ?k:ξ \vdash ?k~?a: \Tbool → \Tint$}
+    \AxiomC{$Γ, ?k:ξ \vdash ?k~?b~?c: \Tbool$}
+    \rulename{App}
+    \BinaryInfC{$Γ, ?k:ξ \vdash ?k~?a~(?k~?b~?c) : \Tint$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung}
+  $?k~?a$ ist auch eine Applikation, also gleiche Regel nochmal:
+  \begin{prooftree}
+    \AxiomC{$Γ, ?k:ξ \vdash ?k: \Tint → \Tbool → \Tint$}
+    \AxiomC{$(Γ, ?k:ξ)(?a) = \Tint$}
+    \rulename{Var}
+    \UnaryInfC{$Γ, ?k:ξ \vdash ?a: \Tint$}
+    \rulename{App}
+    \BinaryInfC{$Γ, ?k:ξ \vdash ?k~?a: \Tbool → \Tint$}
+  \end{prooftree}
+  \onslide<2->{
+    Das sind zwei Variablentypen, also zwei \textit{Var}-Regeln;
+    die linke ist polymorph:
+    \begin{prooftree}
+      \AxiomC{$(Γ, ?k:ξ)(?k) = ξ$}
+      \AxiomC{$ξ \succeq \Tint → \Tbool → \Tint$}
+      \rulename{Var}
+      \BinaryInfC{$Γ, ?k:ξ \vdash ?k: \Tint → \Tbool → \Tint$}
+    \end{prooftree}
+  }
+  (Erinnerung: $ξ = ∀α. ∀β. α → β → α$)
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung}
+  Die verbleibende Beweisverpflichtung ist
+  \[Γ, ?k:ξ \vdash ?k~?b~?c: \Tbool\]
+  \pause
+  Zweimal \textit{App}, zweimal \textit{Var}:
+  \begin{prooftree}
+    \AxiomC{$Γ, ?k:ξ \vdash ?k~?b: \Tchar → \Tbool$}
+    \AxiomC{$(Γ, ?k:ξ)(?c) = \Tchar$}
+    \rulename{Var}
+    \UnaryInfC{$Γ, ?k:ξ \vdash ?c: \Tchar$}
+    \rulename{App}
+    \BinaryInfC{$Γ, ?k:ξ \vdash ?k~?b~?c: \Tbool$}
+  \end{prooftree}
+  \begin{prooftree}
+    \AxiomC{$Γ, ?k:ξ \vdash ?k: \Tbool → \Tchar → \Tbool$}
+    \AxiomC{$(Γ, ?k:ξ)(?b) = \Tbool$}
+    \rulename{Var}
+    \UnaryInfC{$Γ, ?k:ξ \vdash ?b: \Tbool$}
+    \rulename{App}
+    \BinaryInfC{$Γ, ?k:ξ \vdash ?k~?b: \Tchar → \Tbool$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typprüfung}
+  Und für den Beweis von
+  \[Γ, ?k:ξ \vdash ?k: \Tbool → \Tchar → \Tbool\]
+  verwenden wir erneut die polymorphe Variante der \textit{Var}-Regel:
+  \begin{prooftree}
+    \AxiomC{$(Γ, ?k:ξ)(?k) = ξ$}
+    \AxiomC{$ξ \succeq \Tbool → \Tchar → \Tbool$}
+    \BinaryInfC{$Γ, ?k:ξ \vdash ?k: \Tbool → \Tchar → \Tbool$}
+  \end{prooftree}
+  ($ξ$ ist immer noch $∀α. ∀β. α → β → α$.)
+\end{frame}
+
 \end{document}
