@@ -49,4 +49,25 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{\vl{is\_zero}}
+  Definiere Funktion \vl{is\_zero}, die prüft, ob übergebene Church-Zahl 0 ist.
+  Rückgabe soll ein Church-Boolean sein, also $\ctrue$ oder $\cfalse$.
+  
+  \pause
+  Erinnerung: eine Church-Zahl wird mit einer Nachfolgerfunktion und einem Startelement aufgerufen
+  und ruft dann die Nachfolgerfunktion $n$~mal auf dem Startelement auf.
+  Eine allgemeine Operation auf einer Church-Zahl hat also die Form
+  \[λ?n.~?n~s~z\]
+  für bestimmte $s$ und $z$.
+  
+  \pause
+  $c_0$ gibt direkt das Startelement zurück,
+  das sollte bei uns also $\ctrue$ sein.
+  Wenn die Nachfolgerfunktion jemals aufgerufen wird,
+  dann war die Zahl nicht 0,
+  also geben wir in diesem Fall immer $\cfalse$ zurück.
+  \[\vl{is\_zero} = λ?n.~?n~\underbrace{(λ?x.~\cfalse)}_{s}~\underbrace{\ctrue}_{z}\]
+\end{frame}
+
 \end{document}
