@@ -70,4 +70,13 @@
   \[\vl{is\_zero} = λ?n.~?n~\underbrace{(λ?x.~\cfalse)}_{s}~\underbrace{\ctrue}_{z}\]
 \end{frame}
 
+\begin{frame}
+  \frametitle{\vl{less\_eq}}
+  Definiere Vergleichsfunktion \vl{less\_eq}.
+  (Hier und im Rest der Aufgabe dürfen alle bisher definierten Funktionen verwendet werden.)
+  \pause
+  \[\vl{less\_eq} = λ?m.~λ?n.~\vl{is\_zero}~(\vl{sub}~?m~?n)\]
+  (Es gibt keine negativen Church-Zahlen, daher ist z.\,B. $\vl{sub}~c_3~c_5 \Rightarrow^\ast c_0$.)
+\end{frame}
+
 \end{document}
