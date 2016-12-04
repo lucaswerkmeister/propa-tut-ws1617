@@ -458,4 +458,58 @@
   ($ξ$ ist immer noch $∀α. ∀β. α → β → α$.)
 \end{frame}
 
+\prolog
+
+\begin{frame}[fragile]
+  \frametitle{Prolog}
+  Ein Prolog-Programm besteht aus wahren Aussagen, nämlich Fakten und Regeln.
+  \begin{lstlisting}
+    person(thomas).
+    person(michelle).
+    person(john).
+    mutter(michelle, thomas).
+    vater(john, thomas).
+    elter(X,Y) :- mutter(X,Y); vater(X,Y).
+    grosselter(X,Y) :- elter(X,Z), elter(Z,Y).
+  \end{lstlisting}
+  Kleingeschriebene Namen sind Atome, großgeschriebene Variablen.
+  Fakten enden mit einem Punkt,
+  Regeln listen die Bedingungen nach einem \lstinline{:-} auf.
+  Dabei werden Bedingungen durch \lstinline{,} (und) oder \lstinline{;} (oder) getrennt.
+  Oder-Regeln werden aber üblicherweise geschrieben als
+  \begin{lstlisting}
+    elter(X,Y) :- mutter(X,Y).
+    elter(X,Y) :- vater(X,Y).
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prolog}
+  Die Benutzung von Prolog besteht darin, Anfragen zu stellen:
+  \begin{lstlisting}
+    ?- person(thomas).
+    true.
+    
+    ?- person(smith).
+    false.
+  \end{lstlisting}
+  Prolog durchsucht dann die bekannten Aussagen, um die Anfrage zu überprüfen.
+  
+  Eine Anfrage kann auch freie Variablen enthalten,
+  Prolog versucht dann immer wieder, die Aussage zu erfüllen.
+  \begin{lstlisting}
+    ?- person(X).
+    X = thomas ;
+    X = michelle ;
+    X = john.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prolog}
+  Listen funktionieren ähnlich wie in Haskell (leere Liste, Cons), nur mit anderer Syntax.
+  Cons wird geschrieben als \lstinline{[X|Y]}, wobei \lstinline{X} ein Element und \lstinline{Y} die Rest-Liste ist.
+  \lstinline{[1,2,3]} steht also für \lstinline{[1|[2|[3|[]]]]}.
+\end{frame}
+
 \end{document}
