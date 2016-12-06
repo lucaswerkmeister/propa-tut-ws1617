@@ -1,5 +1,12 @@
 \documentclass{beamer}
 \usepackage{tut}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage{pifont}
+\newcommand{\xmark}{\ding{54}}%
+\tikzset{onslide/.code args={<#1>#2}{%
+		  \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
+}}
 
 \def\tuttitle{Rekursion, Typprüfung, Prolog}
 \date{2016-12-05/06}
@@ -519,6 +526,103 @@
   Listen funktionieren ähnlich wie in Haskell (leere Liste, Cons), nur mit anderer Syntax.
   Cons wird geschrieben als \lstinline{[X|Y]}, wobei \lstinline{X} ein Element und \lstinline{Y} die Rest-Liste ist.
   \lstinline{[1,2,3]} steht also für \lstinline{[1|[2|[3|[]]]]}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prolog}
+  \begin{lstlisting}
+    e(x1).
+    e(x2).
+    f(x1).
+    f(x2).
+    g(x1).
+    g(x2).
+    a(X) :- e(X), f(X),    g(X).
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \makeatletter
+  \newcommand*{\overlaynumber}{\number\beamer@slideinframe}
+  \makeatother
+  \begin{overprint}
+  \onslide<1>
+    \begin{lstlisting}[language=Prolog,gobble=4,mathescape]
+      a(x) :- e(x), f(x), $\phantom{\textbf{!,}}$ g(x).
+    \end{lstlisting}
+  \onslide<2->
+    \begin{lstlisting}[language=Prolog,gobble=4,mathescape]
+      a(x) :- e(x), f(x), $\textbf{!,}$ g(x).
+    \end{lstlisting}
+  \end{overprint}
+
+  \begin{tikzpicture}[scale=.58]
+  % boxes
+  \draw (0,0) -- (4,0) -- (4,2) -- (0,2) -- cycle;
+  \draw[xshift=-7.5cm,yshift=-3cm] (0,0) -- (4,0) -- (4,2) -- (0,2) -- cycle;
+  \draw[xshift=-2.5cm,yshift=-3cm,onslide=<2>{thick}] (0,0) -- (4,0) -- (4,2) -- (0,2) -- cycle;
+  \draw<2->[xshift= 2.5cm,yshift=-3cm,onslide=<3>{thick}] (0,0) -- (4,0) -- (4,2) -- (0,2) -- cycle;
+  \draw[xshift= 7.5cm,yshift=-3cm] (0,0) -- (4,0) -- (4,2) -- (0,2) -- cycle;
+  \draw (-6,-4) -- (-7,-6) -- (-5,-6) -- cycle;
+  \draw[xshift=5cm] (-6,-4) -- (-7,-6) -- (-5,-6) -- cycle;
+  \draw[xshift=16cm] (-6,-4) -- (-7,-6) -- (-5,-6) -- cycle;
+
+  % choice points
+  \draw<1,2,3,4,5>[->] (3,0.5)  -- (3.5,0.5) node[anchor=west,xshift=-0.1cm] (cp-a) {\tiny $a_2$};
+  \draw<1,2,3,4,5>[->,xshift=-7.5cm,yshift=-3cm] (3,0.5) -- (3.5,0.5) node[anchor=west,xshift=-0.1cm] (cp-e) {\tiny $e_2$};
+  \draw<1,3,4,5>[->,xshift=-2.5cm,yshift=-3cm] (3,0.5) -- (3.5,0.5) node[anchor=west,xshift=-0.1cm] (cp-f) {\tiny $f_2$};
+  \draw<1,4>[->,xshift=7.5cm,yshift=-3cm] (3,0.5) -- (3.5,0.5) node[anchor=west,xshift=-0.1cm] (cp-g) {\tiny $g_2$};
+
+
+  % child-relations
+  \draw (0.5,0) -- (-5,-1);
+  \draw (1,0) -- (-1,-1);
+  \draw<2-> (3,0) -- (5,-1);
+  \draw (3.5,0) -- (8,-1);
+  \draw (-6,-3) -- (-6,-4);
+  \draw (-1,-3) -- (-1,-4);
+  \draw (10,-3) -- (10,-4);
+  % control flow
+  \draw[->,thick] (-3,1.5) -- (0,1.5);
+  \draw[->,thick] (4,1.5) -- (5,1.5) -- (5,-0.5) -- (-8,-0.5) -- (-8,-1.5) -- (-7.5,-1.5);
+  \draw[->,thick] (-3.5,-1.5) -- (-2.5,-1.5);
+  \draw[<-,thick] (-3.5,-2.5) -- (-2.5,-2.5);
+  \draw<1>[->,thick] (1.5,-1.5) -- (7.5,-1.5);
+  \draw<2->[->,thick] (1.5,-1.5) -- (2.5,-1.5);
+  \draw<2->[->,thick] (6.5,-1.5) -- (7.5,-1.5);
+  \draw<2->[<-,thick] (6.5,-2.5) -- (7.5,-2.5);
+  \draw[->,thick] (11.5,-1.5) -- (12,-1.5);
+  \draw[<-,thick] (11.5,-2.5) -- (12,-2.5);
+  \draw<1>[->,thick] (7.5,-2.5) -- (1.5,-2.5);
+  \draw<2>[->,thick] (2.5,-2.5) -- (1.5,-2.5);
+  \draw<5->[->,ultra thick] (2.5,-2.5) -- (2,-2.5) -- (2,0.5) -- (-2,0.5);
+
+  % box labels
+  \footnotesize
+  \node at (2,2.2) {a(x)};
+  \node at (-6,-0.8) {e(x)};
+  \node at (-1.5,-0.8) {f(x)};
+  \node<2-> at ( 5.5,-0.8) {!};
+  \node at (9,-0.8) {g(x)};
+
+  % eliminate choice points
+  \node<3-> at (cp-a) {\textcolor{red}{\xmark}};
+  \node<3-> at (cp-e) {\textcolor{red}{\xmark}};
+  \node<3-> at (cp-f) {\textcolor{red}{\xmark}};
+
+  % for debugging purposes: show current overlay number
+  %\node at (10,-10) {\overlaynumber};
+
+  \onslide<2>{\node[anchor=center] at (-2, -9) {\lstinline!e! solange re-erfüllen, bis \lstinline!f! erfüllt};}
+  \onslide<3>{\node[anchor=center,align=left] at (-2, -9) {Sobald \lstinline!f! erfüllt wird, wird der Cut erreicht \\$\Rightarrow$ Choicepoints links vom Cut (insb. bei \lstinline!a!) löschen!};}
+  \onslide<4>{\node[anchor=center] at (-2, -9) {nach dem Cut: gegebenenfalls noch \lstinline!g! re-erfüllen};}
+  \onslide<5>{\node[anchor=center,align=left] at (-2, -9) {Sobald \lstinline!g! nicht mehr re-erfüllt werden kann: Abbruch! \\Auch \lstinline!a! wird nicht mehr ausgeführt!};}
+  % strike through
+  \usetikzlibrary{patterns};
+  \onslide<5->{\fill[pattern=north west lines] (-8.2,-0.3) rectangle (1.6,-6.2);}
+
+
+  \end{tikzpicture}
 \end{frame}
 
 \end{document}
