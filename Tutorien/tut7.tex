@@ -275,4 +275,95 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Alte Folie: $λ$-Terme und ihre Typen}
+  \begin{align*}
+    D &= λ\vr{x}.~λ\vr{y}.~\vr{y}~(\vr{x}~\vr{y}) \quad &&:: ((α → β) → α) → (α → β) → β \\
+    E &= λ\vr{z}.~\vr{z} \quad &&:: α → α \\
+  \end{align*}
+  $D~E$ ist nicht typisierbar, denn dazu müssten Parameter- und Argumenttyp übereinstimmen, also:
+  \begin{align*}
+    α → α &= (α → β) → α \\
+    α &= α → β \\
+    &= (α → β) → β \\
+    &= ((α → β) → β) → β \\
+    &=\dots
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  \emph{Unifikation} ist (neben Ausführungsbäumen) der Kern von Prolog:
+  der Vorgang, mit dem ein Gleichungssystem wie
+  \begin{align*}
+    α → α &= (α → β) → α
+  \intertext{oder}
+    \mathtt{a(t_1, a(X_3, X_4))} &= \mathtt{a(X_1, X_2)} \\
+    \mathtt{X_3} &= \mathtt{t_2} \\
+    \mathtt{X_4} &= \mathtt{X_1}
+  \end{align*}
+  gelöst wird.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  Ein \emph{Unifikator} ist eine Substitution, die ein solches Gleichungssystem löst.
+  Eine Substitution wird in eckigen Klammern geschrieben, z.\,B. $\mathtt{[X_1 ⇒ X_2, X_2 ⇒ X_3]}$,
+  und kann mit $∘$ verkettet werden (vergleiche \lstinline[language=Haskell]{.}-Operator in Haskell).
+  
+  Was ist der Unterschied zwischen den folgenden Substitutionen?
+  \begin{align*}
+    & \mathtt{[X_1 ⇒ X_2, \quad\,X_2 ⇒ X_3]} \\
+    & \mathtt{[X_1 ⇒ X_2] ∘ [X_2 ⇒ X_3]} \\
+    & \mathtt{[X_2 ⇒ X_3] ∘ [X_1 ⇒ X_2]}
+  \end{align*}
+  \pause
+  Innerhalb einer Substitution wird \emph{nur einmal} „nachgeschlagen“.
+  $\mathtt{[X_1 ⇒ X_2, X_2 ⇒ X_3]}$ macht $\mathtt{X_1}$ nur zu $\mathtt{X_2}$, nicht zu $\mathtt{X_3}$.
+  Ketten werden von rechts nach links gelesen, $\mathtt{[X_1 ⇒ X_2] ∘ [X_2 ⇒ X_3]}$ hat also den gleichen Effekt.
+  Nur $\mathtt{[X_2 ⇒ X_3] ∘ [X_1 ⇒ X_2]}$ macht $\mathtt{X_1}$ zu $\mathtt{X_3}$.
+\end{frame}
+
+\begin{frame}[fragile]\lstset{language=Haskell}
+  \frametitle{Noch ältere Folie: \lstinline{fun7}}
+  \begin{lstlisting}
+    fun7 x = if show x /= [] then x else error
+  \end{lstlisting}
+  %\pause
+  Hilfestellung:
+  \begin{lstlisting}
+    show :: Show a => a -> String
+  \end{lstlisting}
+  %\pause
+  Nicht typisierbar ohne Language Extension.
+  Alle Verzweigungen müssen den selben Typ zurückgeben,
+  und da \lstinline{error :: [Char] -> a} eine Funktion ist,
+  muss auch \lstinline{x} eine Funktion sein,
+  die aber für \lstinline{show x} gleichzeitig \lstinline{Show} erfüllen muss.
+  \begin{lstlisting}
+    fun7 ::
+      Show ([Char] -> a) =>
+      ([Char] -> a) -> [Char] -> a
+  \end{lstlisting}
+  \begin{quote}
+    Non type-variable argument in the constraint: \lstinline{Show ([Char] -> a)} \\
+    (Use FlexibleContexts to permit this)
+  \end{quote}
+\end{frame}
+
+\begin{frame}\lstset{language=Haskell}
+  \frametitle{Unifikation}
+  Anders ausgedrückt: Haskell muss \lstinline{Show a => a} und \lstinline{[Char] -> a} unifizieren.
+  Das Ergebnis ist der Typ \lstinline{Show ([Char] -> a) => [Char] -> a}, welcher ungültig ist.
+  
+  \pause
+  Allgemein gilt: gegeben $c: \Tbool$, $t_1: τ_1$, $t_2: τ_2$ hat $\textbf{\texttt{if }} c \textbf{\texttt{ then }} t_1 \textbf{\texttt{ else }} t_2$ den Typ $τ$,
+  unter der Bedingung, dass sich $τ_1$ und $τ_2$ zu $τ$ unifizieren lassen.
+  
+  \pause
+  (In einem Typsystem mit \emph{Union Types}, z.\,B. Ceylon,
+  hat der Ausdruck stattdessen den Typ $τ_1 \cup τ_2$,
+  ohne Einschränkungen an $τ_1$ und $τ_2$.)
+\end{frame}
+
 \end{document}
