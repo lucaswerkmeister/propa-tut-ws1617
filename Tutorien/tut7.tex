@@ -99,4 +99,59 @@
   Alternativ: feststellen, dass auch mit vier \lstinline{farbe}-Fakten eine Lösung mit nur drei Farben herauskam.
 \end{frame}
 
+\begin{frame}
+  \frametitle{Tester, Generatoren, Ausführungsbäume}
+  Die Prädikate \lstinline{odd} und \lstinline{even} sind in zwei Varianten gegeben:
+  \lstinputlisting[caption=Tester]{tut7-tester.pl}
+  \lstinputlisting[caption=Generatoren]{tut7-generatoren.pl}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tester, Generatoren, Ausführungsbäume}
+  \lstinputlisting{tut7-tester.pl}
+  Warum können die Tester nicht als Generatoren verwendet werden?
+  
+  \pause
+  \lstinline{?even(X)} findet zwar zunächst \lstinline{X=0},
+  danach schlagen aber die Teilziele \lstinline{X>0} und \lstinline{X1 is X-1} für \emph{uninstanziiertes} \lstinline{X} fehl –
+  arithmetische Operationen und \lstinline{is} sind nur für instanziierte Variablen zugelassen.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tester, Generatoren, Ausführungsbäume}
+  \lstinputlisting{tut7-generatoren.pl}
+  Warum können die Generatoren nicht als Tester verwendet werden?
+  
+  \pause
+  Erfüllbare Anfragen, z.\,B. \lstinline{?even(2)}, funktionieren zunächst.
+  Bei Reerfüllung und bei nicht erfüllbaren Anfragen (z.\,B. \lstinline{?even(3)}) versucht Prolog aber,
+  mit immer größeren \lstinline{Y} die Bedingung \lstinline{X is Y+1} zu erfüllen,
+  ohne erkennen zu können, dass es nie funktionieren wird.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tester, Generatoren, Ausführungsbäume}
+  \lstinputlisting{tut7-generatoren.pl}
+  Was passiert, wenn bei den Generatoren die Teilziele \lstinline{X>1} und \lstinline{X>0} weggelassen werden?
+  
+  \begin{description}
+  \pause
+  \item[\texttt{X>1}]
+    \lstinline{odd(1)} kann nun sowohl direkt als auch über \lstinline{even(0)} gezeigt werden,
+    \lstinline{?odd(X)} generiert daher die 1 doppelt.
+    Jede andere Zahl über 1, ob gerade oder ungerade, wird letztlich auf \lstinline{odd(1)} zurückgeführt und damit ebenfalls doppelt generiert.
+  \pause
+  \item[\texttt{X>0}]
+    Keine Auswirkung.
+    Alle an dieser Stelle erreichten Zahlen sind als Nachfolger einer ungeraden Zahl bereits $>1>0$.
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tester, Generatoren, Ausführungsbäume}
+  \lstinputlisting{tut7-generatoren.pl}
+  Im Folgenden (Aufgabenblatt + Tafel) sind für die Anfrage \lstinline{?even(X)} die Ausführungsbäume zum Zeitpunkt der Ausgabe von \lstinline{X=0} und \lstinline{X=2} dargestellt.
+  Zeichne Ausführungsbaum zum Zeitpunkt der Ausgabe von \lstinline{X=4}; welches Teilziel schlägt dabei einmal fehl?
+\end{frame}
+
 \end{document}
