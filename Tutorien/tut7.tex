@@ -233,4 +233,46 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]\lstset{language=Haskell}
+  \frametitle{\lstinline{splits}}
+  Implementiere Haskell-Funktion
+  \begin{lstlisting}
+    splits :: [t] -> [([t],[t])]
+  \end{lstlisting}
+  die alle möglichen Zerlegungen einer Liste in Anfangs- und Endteil berechnet.
+  Anfangs- und Endteil werden in Tupel gespeichert,
+  Rückgabe ist Liste aller möglichen Tupel.
+  \pause
+  \begin{lstlisting}
+    splits [] = [([],[])]
+    splits (x:l) = ([],x:l) : [ (x:s,e) | (s,e) <- splits l ]
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    splits l = [splitAt n l | n <- [0..length l]]
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{splits}}
+  Implementiere Prolog-Prädikat
+  \begin{lstlisting}
+    splits(L, (S,E))
+  \end{lstlisting}
+  das bei Reerfüllung alle möglichen Zerlegungen von \lstinline{L} in Teile \lstinline{S} und \lstinline{E} liefert.
+  
+  \pause
+  Rekursiv, analog zur ersten Haskell-Version, mit Reerfüllung statt List~Comprehension:
+  \begin{lstlisting}
+    splits(L, ([],L)).
+    splits([X|L], ([X|S],E)) :- splits(L, (S,E)).
+  \end{lstlisting}
+  
+  \pause
+  Rückwärtsausführung von \lstinline{append}:
+  \begin{lstlisting}
+    splits(L, (S,E)) :- append(S, E, L).
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
