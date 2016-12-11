@@ -154,4 +154,83 @@
   Zeichne Ausführungsbaum zum Zeitpunkt der Ausgabe von \lstinline{X=4}; welches Teilziel schlägt dabei einmal fehl?
 \end{frame}
 
+\begin{frame}
+  \frametitle{Wolf, Ziege, Kohl}
+  Das klassische Wolf-Ziege-Kohl-Rätsel.
+  In Prolog lässt sich die Situation als 4-Tupel \lstinline{(Mann,Ziege,Wolf,Kohl)} von Ufern darstellen,
+  z.\,B.~\lstinline{(rechts,links,links,rechts)}.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Wolf, Ziege, Kohl}
+  Definiere einstelligen Tester \lstinline{erlaubt(Situation)},
+  der genau für Situationen erfüllt ist, in denen keines der Dinge gefressen wird.
+  
+  \pause
+  Zur Ausnutzung von Symmetrie:
+  \begin{lstlisting}
+    gegenueber(links,rechts).
+    gegenueber(rechts,links).
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    erlaubt((Mann,Ziege,_,_)) :- Mann = Ziege.
+    erlaubt((_,Ziege,Wolf,Kohl)) :-
+      gegenueber(Ziege,Wolf),
+      gegenueber(Ziege,Kohl).
+  \end{lstlisting}
+  
+  (\lstinline{_} ist wie in Haskell eine „Wegwerf-Variable“
+  und kann in \lstinline{(Mann,Ziege,_,_)} für zwei verschiedene Ufer stehen.)
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Wolf, Ziege, Kohl}
+  Definiere dreistelligen Generator \lstinline{fahrt(S1,F,S2)},
+  der zu Situation \lstinline{S1} bei Reerfüllung alle Situationen \lstinline{S2} generiert,
+  die durch einfache Flussüberfahrt entstehen können.
+  Zeichenkette \lstinline{F} beschreibt dabei die Fahrt, z.\,B. \lstinline{'leer'}, \lstinline{'Ziege'}.
+  
+  \sout{Geben Sie dabei lediglich die Regeln für Überfahrten mit Ziege, sowie die für leere Fahrten an.}
+
+  \pause
+  \begin{lstlisting}
+    fahrt((U,Z,W,K), 'leer', (U2,Z,W,K)) :- gegenueber(U,U2).
+    fahrt((U,U,W,K), 'Ziege', (U2,U2,W,K)) :- gegenueber(U,U2).
+    fahrt((U,Z,U,K), 'Wolf', (U2,Z,U2,K)) :- gegenueber(U,U2).
+    fahrt((U,Z,W,U), 'Kohl', (U2,Z,W,U2)) :- gegenueber(U,U2).
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Wolf, Ziege, Kohl}
+  Das Prädikat \lstinline{loesung(Fahrten)} generiert alle Lösungen des Problems:
+  \begin{lstlisting}
+    loesung(Fahrten) :- start(S), ziel(Z),
+                        erreichbar(S,[],Fahrten,Z).
+    start((links,links,links,links)).
+    ziel((rechts,rechts,rechts,rechts)).
+  \end{lstlisting}
+  Das dazu benötigte vierstellige Prädikat \lstinline{erreichbar(S,Besucht,Fahrten,Z)}
+  ist für Startsituation \lstinline{S} und Zielsituation \lstinline{Z} erfüllt,
+  wenn \lstinline{Z} von \lstinline{S} durch Folge von \lstinline{fahrt}en erreichbar ist.
+  Es dürfen nur \lstinline{erlaubt}e Zwischensituationen entstehen,
+  und um Endlosschleifen zu vermeiden, darf keine der Situationen aus \lstinline{Besucht} erneut vorkommen.
+  Die Liste \lstinline{Fahrten} enthält die Beschreibungen der einzelnen \lstinline{fahrt}en in richtiger Reihenfolge.
+  
+  Hinweis: verwende \lstinline{member} und \lstinline{not} aus Vorlesung.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Wolf, Ziege, Kohl}
+  \begin{lstlisting}
+    erreichbar(S,_,[],S).
+    erreichbar(S,Besucht,[Fahrt|Fahrten],Z) :-
+      fahrt(S,Fahrt,S2),
+      erlaubt(S2),
+      not(member(S2,Besucht)),
+      erreichbar(S2,[S2|Besucht],Fahrten,Z).
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
