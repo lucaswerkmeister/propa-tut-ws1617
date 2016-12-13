@@ -546,11 +546,11 @@
   \newcommand*{\overlaynumber}{\number\beamer@slideinframe}
   \makeatother
   \begin{overprint}
-  \onslide<1>
+  \onslide<1|handout:0>
     \begin{lstlisting}[language=Prolog,gobble=4,mathescape]
       a(x) :- e(x), f(x), $\phantom{\textbf{!,}}$ g(x).
     \end{lstlisting}
-  \onslide<2->
+  \onslide<2-|handout:1>
     \begin{lstlisting}[language=Prolog,gobble=4,mathescape]
       a(x) :- e(x), f(x), $\textbf{!,}$ g(x).
     \end{lstlisting}
@@ -613,13 +613,14 @@
   % for debugging purposes: show current overlay number
   %\node at (10,-10) {\overlaynumber};
 
-  \onslide<2>{\node[anchor=center] at (-2, -9) {\lstinline!e! solange re-erfüllen, bis \lstinline!f! erfüllt};}
-  \onslide<3>{\node[anchor=center,align=left] at (-2, -9) {Sobald \lstinline!f! erfüllt wird, wird der Cut erreicht \\$\Rightarrow$ Choicepoints links vom Cut (insb. bei \lstinline!a!) löschen!};}
-  \onslide<4>{\node[anchor=center] at (-2, -9) {nach dem Cut: gegebenenfalls noch \lstinline!g! re-erfüllen};}
-  \onslide<5>{\node[anchor=center,align=left] at (-2, -9) {Sobald \lstinline!g! nicht mehr re-erfüllt werden kann: Abbruch! \\Auch \lstinline!a! wird nicht mehr ausgeführt!};}
+  \onslide<beamer:0>{\node[anchor=center,align=left] at (-2, -9) {(Diese Folie funktioniert im Handout-Modus nur begrenzt.)};}
+  \onslide<2|handout:0>{\node[anchor=center] at (-2, -9) {\lstinline!e! solange re-erfüllen, bis \lstinline!f! erfüllt};}
+  \onslide<3|handout:0>{\node[anchor=center,align=left] at (-2, -9) {Sobald \lstinline!f! erfüllt wird, wird der Cut erreicht \\$\Rightarrow$ Choicepoints links vom Cut (insb. bei \lstinline!a!) löschen!};}
+  \onslide<4|handout:0>{\node[anchor=center] at (-2, -9) {nach dem Cut: gegebenenfalls noch \lstinline!g! re-erfüllen};}
+  \onslide<5|handout:0>{\node[anchor=center,align=left] at (-2, -9) {Sobald \lstinline!g! nicht mehr re-erfüllt werden kann: Abbruch! \\Auch \lstinline!a! wird nicht mehr ausgeführt!};}
   % strike through
   \usetikzlibrary{patterns};
-  \onslide<5->{\fill[pattern=north west lines] (-8.2,-0.3) rectangle (1.6,-6.2);}
+  \onslide<5-|handout:1>{\fill[pattern=north west lines] (-8.2,-0.3) rectangle (1.6,-6.2);}
 
 
   \end{tikzpicture}
