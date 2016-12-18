@@ -85,7 +85,7 @@
 % ?x means \vr{x} in math mode
 \let\qm=?
 \catcode`?=13
-\def?{%
+\protected\def?{%
   \ifmmode%
   \expandafter\vr%
   \else%
