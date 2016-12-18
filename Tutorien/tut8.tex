@@ -240,4 +240,58 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Codes: Caesar, \lstinline{shifted}}
+  Schreibe Prädikat \lstinline{shifted(2,3,X)}, welches die Gleichung $C=(P+S) \mod 256$ prüft.
+  Dabei muss Rückwärtsausführung in allen drei Positionen funktionieren.
+  Für Effizienz weiter unten soll das Prädikat ferner für unspezifizierte \lstinline{S}, \lstinline{P}, \lstinline{C} auch erfüllbar sein.
+  \pause
+  \lstinputlisting[linerange={1-7}]{tut8-codes.pl}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Codes: Caesar, \lstinline{caesar}}
+  Schreibe Prädikat \lstinline{caesar(S,P,C)}, welches besagt,
+  dass Liste von Zahlen \lstinline{P} elementweise um Zahl \lstinline{S} verschoben die Liste von Zahlen \lstinline{C} ergibt.
+  
+  (In SWI-Prolog ab Version 7 ist \lstinline{"abc"} ein \emph{string} (eigener Typ), keine Liste von ASCII-Codepoints –
+  entweder mit \texttt{--traditional} aufrufen oder \lstinline{`abc`} verwenden.)
+  
+  \pause
+  \lstinputlisting[linerange={9-11}]{tut8-codes.pl}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Codes: Vigenère, \lstinline{vigenere}}
+  Schreibe Prädikat \lstinline{vigenere(S,P,C)} analog zu \lstinline{caesar}.
+  Diesmal ist \lstinline{S} aber eine Liste (Schlüsselwort), die mit jedem Schritt um ein Zeichen rotiert wird.
+  
+  Zur Erinnerung:
+  \lstinputlisting[linerange={9-11}]{tut8-codes.pl}
+  
+  \pause
+  \lstinputlisting[linerange={13-16}]{tut8-codes.pl}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Codes: Vigenère, Entschlüsselung, \lstinline{subseq}}
+  Zur Entschlüsselung brauchen wir noch Prädikat \lstinline{subseq(S,L)}, welches angibt, ob Liste \lstinline{S} in Liste \lstinline{L} vorkommt.
+  
+  \pause
+  \lstinputlisting[linerange={18-19}]{tut8-codes.pl}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Codes: Vigenère, Entschlüsselung, Kür}
+  Entschlüsseln Sie folgende Botschaft mit Hilfe der obigen Prädikate: (snip)
+  
+  Hinweis: der verwendete Schlüssel ist 8 Zeichen lang, und im Text kommt das Wort \texttt{procedure} vor.
+  
+  \begin{lstlisting}
+    ciphertext([140,...]).
+  \end{lstlisting}
+  \pause
+  \lstinputlisting[linerange={23-30}]{tut8-codes.pl}
+\end{frame}
+
 \end{document}
