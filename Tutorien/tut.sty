@@ -37,6 +37,8 @@
 
 %\DeclareUnicodeCharacter{2192}{\to} % →
 \newcommand{\textrightarrow}{\to} % inputenc declares → as \textrightarrow, fix this
+%\DeclareUnicodeCharacter{2022}{\bullet} % •
+\renewcommand{\textbullet}{\vcenter{\hbox{\tiny$\bullet$}}} % inputenc declares • as \textbullet, fix this (tiny bullet adapted from http://tex.stackexchange.com/a/8534/25264)
 
 \AtBeginSection[]
 {
