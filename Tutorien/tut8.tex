@@ -126,4 +126,72 @@
   \[σ=[?L ⇒ \vr{L2}, ?X ⇒ 1, \vr{Xs} ⇒ [2,3], ?Y ⇒ 3, \vr{Ys} ⇒ [4]]\]
 \end{frame}
 
+\begin{frame}
+  \frametitle{Reguläre Ausdrücke}
+  Reguläre Ausdrücke lassen sich in Prolog in Präfixnotation darstellen:
+  \begin{table}
+    \begin{tabular}{c|c}
+      Ausdruck & Prolog-Term \\\hline
+      $a \cdot b \cdot c$ & $•(?a,•(?b,?c))$ \\
+      $a^*$ & $*(?a)$ \\
+      $ε ∪ b$ & $∪(ε,?b)$ \\
+      $a^* ∪ (a \cdot b \cdot c) ∪ (ε∪b)^*$ & $∪(*(?a),∪(•(?a,•(?b,?c)),*(∪(ε,?b))))$
+    \end{tabular}
+  \end{table}
+  Implementiere Prädikat \lstinline{matches(Regexp,S)}, das prüft, ob Zeichenfolge \lstinline{S} durch Ausdruck \lstinline{Regexp} akzeptiert wird.
+  Hilfreich sind dabei \lstinline{append(S1,S2,S)}, \lstinline{not} und \lstinline{atom}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reguläre Ausdrücke: $ε$}
+  Der Ausdruck $ε$ akzeptiert die leere Zeichenfolge.
+  
+  \pause
+  \texttt{matches($ε$,[]).}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reguläre Ausdrücke: Atome}
+  Ausdrücke $a,b,c,…$ akzeptieren jeweils die Zeichenfolge „a“, „b“, „c“, ….
+  
+  \pause
+  \lstinline{matches(C,[C]) :- atom(C).}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reguläre Ausdrücke: $∪$}
+  Ausdrücke $α∪β$ akzeptieren eine Zeichenfolge $s$, falls $s$ durch $α$ oder $β$ akzeptiert wird.
+  
+  \pause
+  \texttt{%
+    matches($∪$(A,\_),S) :- matches(A,S).\\
+    matches($∪$(\_,B),S) :- matches(B,S).
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reguläre Ausdrücke: $\cdot$}
+  Ausdrücke $α \cdot β$ akzeptieren eine Zeichenfolge $s_1 \cdot s_2$, falls $α$ die Folge $s_1$ und $β$ die Folge $s_2$ akzeptiert.
+  
+  \pause
+  \texttt{matches($•$(A,B),S) :- append(S1,S2,S),\\
+    \texttt{ }\texttt{ }matches(A,S1), matches(B,S2).}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reguläre Ausdrücke: $*$}
+  Ausdrücke $α^*$ akzeptieren
+  \begin{itemize}
+  \item die leere Zeichenfolge, sowie
+  \item Zeichenfolgen $s_1 \cdot s_2$, falls $s_1$ nicht die leere Folge ist, $α$ die Folge $s_1$ akzeptiert und $α^*$ die Folge $s_2$ akzeptiert.
+  \end{itemize}
+  
+  \pause
+  \texttt{%
+    matches(*(\_),[]).\\ \pause
+    matches(*(A),S) :- append(S1,S2,S), \textbf{not}(S1=[]),\\
+      \texttt{ }\texttt{ }matches(A,S1), matches(*(A), S2).
+  }
+\end{frame}
+
 \end{document}
