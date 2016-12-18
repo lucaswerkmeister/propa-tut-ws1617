@@ -14,4 +14,116 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Unifikation}
+  Gegeben ist das Gleichungssystem
+  \begin{align*}
+    ?X_1 &= ?X_2 \\
+    ?X_2 &= ?X_3
+  \intertext{sowie die Substitutionen}
+    σ_1 &= [?X_1 ⇒ ?X_2, ?X_2 ⇒ ?X_3] \\
+    σ_2 &= [?X_2 ⇒ ?X_3] ∘ [?X_1 ⇒ ?X_2] \\
+    σ_3 &= [?X_1 ⇒ a, ?X_2 ⇒ a, ?X_3 ⇒ a]\text.
+  \end{align*}
+  Welche der Substitutionen ist ein Unifikator für das Gleichungssystem,
+  und welche ist ein allgemeinster Unifikator dafür?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  \begin{align*}
+    ?X_1 &= ?X_2 \\
+    ?X_2 &= ?X_3 \\
+  \intertext{Wende $σ_1 = [?X_1 ⇒ ?X_2, ?X_2 ⇒ ?X_3]$ an…}
+    \onslide<2->{
+    ?X_2 &= ?X_3 \\
+    ?X_3 &= ?X_3}
+  \end{align*}
+  \onslide<2->{Das Gleichungssystem ist nicht immer erfüllt, $σ_1$ ist also kein Unifikator.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  \begin{align*}
+    ?X_1 &= ?X_2 \\
+    ?X_2 &= ?X_3 \\
+  \intertext{Wende $σ_2 = [?X_2 ⇒ ?X_3] ∘ [?X_1 ⇒ ?X_2]$ an…}
+    \onslide<2->{
+    ?X_3 &= ?X_3 \\
+    ?X_3 &= ?X_3}
+  \end{align*}
+  \onslide<2->{Das Gleichungssystem ist immer erfüllt, $σ_2$ ist also ein Unifikator.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  \begin{align*}
+    ?X_1 &= ?X_2 \\
+    ?X_2 &= ?X_3 \\
+  \intertext{Wende $σ_3 = [?X_1 ⇒ a, ?X_2 ⇒ a, ?X_3 ⇒ a]$ an…}
+    \onslide<2->{
+    a &= a \\
+    a &= a}
+  \end{align*}
+  \onslide<2->{Das Gleichungssystem ist immer erfüllt, $σ_3$ ist also ein Unifikator.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  Allgemeinster Unifikator ist \pause $σ_2$, denn dabei wird im Gegensatz zu $σ_3$ das Ergebnis noch variabel gelassen.
+  (Tatsächlich ist $σ_3 = [?X_3 ⇒ a] ∘ σ_2$.)
+  
+  Formaler Beweis: $\unify(\{?X_1=?X_2,?X_2=?X_3\})$ ausführen und feststellen, dass $σ_2$ herauskommt.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  Bestimme allgemeinsten Unifikator für
+  \begin{align*}
+    ?a(?t_1,?a(?X_3,?X_4)) &= ?a(?X_1,?X_2) \\
+    ?X_3 &= ?t_2 \\
+    ?X_4 &= ?X_1\text.
+  \end{align*}
+  Dieser soll vollständig ausgerechnet sein, also in der Form
+  \[[?X_1 ⇒ …, ?X_2 ⇒ …, ?X_3 ⇒ …, ?X_4 ⇒ …]\text.\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  \begin{align*}
+    ?a(?t_1,?a(?X_3,?X_4)) &= ?a(?X_1,?X_2) \\
+    ?X_3 &= ?t_2 \\
+    ?X_4 &= ?X_1
+  \end{align*}
+  Variante 1: Unifikator per Intuition ausrechnen und direkt angeben:
+  \pause
+  \[[?X_1 ⇒ ?t_1, ?X_2 ⇒ ?a(?t_2,?t_1), ?X_3 ⇒ ?t_2, ?X_4 ⇒ ?t_1]\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unifikation}
+  Variante 2: $\unify$-Algorithmus.
+  \begin{align*}
+    &\unify(C) = \\
+    &\texttt{if } C == ∅ \texttt{ then } [] \\
+    &\texttt{else let } \{θ_l = θ_r\} ∪ C' = C \texttt{ in} \\
+    &\texttt{  if } θ_l == θ_r \texttt{ then } \unify(C') \\
+    &\texttt{  else if } θ_l == ?Y \land ?Y \not\in \FV(θ_r) \texttt{ then } \unify([?Y ⇒ θ_r]C') ∘ [?Y ⇒ θ_r] \\
+    &\texttt{  else if } θ_r == ?Y \land ?Y \not\in \FV(θ_l) \texttt{ then } \unify([?Y ⇒ θ_l]C') ∘ [?Y ⇒ θ_l] \\
+    &\texttt{  else if } θ_l == ?f(θ_l^1, …, θ_l^n) \land θ_r == ?f(θ_r^1, …, θ_r^n) \\
+    &\texttt{  }\texttt{  then } \unify(C' ∪ \{θ_l^1 = θ_r^1, …, θ_l^n = θ_r^n\}) \\
+    &\texttt{  else fail}
+  \end{align*}
+\end{frame}
+
+% TODO a slide for this?
+
+\begin{frame}
+  \frametitle{Unifikation}
+  Bestimme allgemeinsten Unifikator für
+  \[?a([1,2,3],[3,4],?L) = ?a([?X|\vr{Xs}],[?Y|\vr{Ys}],\vr{L2})\text.\]
+  \pause
+  \[σ=[?L ⇒ \vr{L2}, ?X ⇒ 1, \vr{Xs} ⇒ [2,3], ?Y ⇒ 3, \vr{Ys} ⇒ [4]]\]
+\end{frame}
+
 \end{document}
