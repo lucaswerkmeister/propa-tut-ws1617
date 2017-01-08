@@ -12,4 +12,234 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Typinferenz Vorgehen}
+  Vier Schritte zur Typinferenz:
+  \begin{enumerate}
+  \item Herleitungsbaum erstellen, mit frischen Typvariablen $α_i$ überall
+  \item Gleichungssystem $C$ für die $α_i$ extrahieren gemäß Typisierungsregeln
+  \item Unifikator $σ_C$ finden, der $C$ löst
+  \item Typ $σ_C(α_1)$ bestimmen
+  \end{enumerate}
+  Schritt 1 und 2 macht man am besten zusammen.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typinferenz Aufgabe}
+  Gegeben seien folgende $λ$-Terme:
+  \begin{align*}
+    t_1 &= λ?z.~?z \\
+    t_2 &= λ?f.~λ?x.~?f~?x \\
+    t_3 &= λ?f.~λ?x.~?f~(?f~?x) \\
+    t_4 &= λ?x.~λ?y.~?y~(?x~?y)
+  \end{align*}
+  Es soll für jeden Term eine Typinferenz durchgeführt werden.
+\end{frame}
+
+\newcommand{\spickzettel}[0]{
+  \begin{frame}
+    \frametitle{Typinferenz Spickzettel}
+    \begin{multicols}{2}
+      \begin{prooftree}
+        \AxiomC{$c ∈ \lambdaval{Const}$}
+        \rulename{Const}
+        \UnaryInfC{$Γ \vdash c : α_i$}
+      \end{prooftree}
+      \break
+      $α_i = τ_c$
+    \end{multicols}
+    
+    \begin{multicols}{2}
+      \begin{prooftree}
+        \AxiomC{$(Γ, x : α_i)(x) = α_j$}
+        \rulename{Var}
+        \UnaryInfC{$(Γ, x : α_i) \vdash x : α_j$}
+      \end{prooftree}
+      \break
+      $α_i = α_j$
+    \end{multicols}
+    
+    \begin{multicols}{2}
+      \begin{prooftree}
+        \AxiomC{$Γ, x : α_j \vdash t : α_k$}
+        \rulename{Abs}
+        \UnaryInfC{$Γ \vdash λ x.~t : α_i$}
+      \end{prooftree}
+      \break
+      $α_i = α_j → α_k$
+    \end{multicols}
+    
+    \begin{multicols}{2}
+      \begin{prooftree}
+        \AxiomC{$Γ \vdash t_1 : α_k$}
+        \AxiomC{$Γ \vdash t_2 : α_j$}
+        \rulename{App}
+        \BinaryInfC{$Γ \vdash t_1~t_2 : α_i$}
+      \end{prooftree}
+      \break
+      $α_k = α_j → α_i$
+    \end{multicols}
+    
+    \begin{enumerate}
+    \item Herleitungsbaum erstellen, mit frischen Typvariablen $α_i$ überall
+    \item Gleichungssystem $C$ für die $α_i$ extrahieren gemäß Typisierungsregeln
+    \item Unifikator $σ_C$ finden, der $C$ löst
+    \item Typ $σ_C(α_1)$ bestimmen
+    \end{enumerate}
+  \end{frame}
+}
+
+\spickzettel
+
+\begin{frame}
+  \frametitle{Typinferenz $t_1$}
+  \[t_1 = λ?z.~?z\]
+  \pause
+  \begin{multicols}{2}
+    \begin{prooftree}
+      \AxiomC{$(?z:α_2)(?z)=α_3$}
+      \rulename[c2]{Var}
+      \UnaryInfC{$?z:α_2 \vdash ?z:α_3$}
+      \rulename[c1]{Abs}
+      \UnaryInfC{$\vdash λ?z.~?z : α_1$}
+    \end{prooftree}
+    \break
+    \begin{align*}
+      C &= \{{\color{c1}α_1=α_2→α_3}, {\color{c2}α_2=α_3}\} \\
+      σ_C &= [α_1 ⇒ α_2 → α_2, α_3 ⇒ α_2] \\
+      σ_C(α_1) &= α_2 → α_2
+    \end{align*}
+  \end{multicols}
+\end{frame}
+
+\spickzettel
+
+\begin{frame}
+  \frametitle{Typinferenz $t_2$}
+  \[t_2 = λ?f.~λ?x.~?f~?x\]
+  \pause
+  \begin{prooftree}
+    \AxiomC{$(?f:α_2,?x:α_4)(?f)=α_6$}
+    \rulename[c4]{Var}
+    \UnaryInfC{$?f:α_2,?x:α_4 \vdash ?f:α_6$}
+    \AxiomC{$(?f:α_2,?x:α_4)(?x)=α_7$}
+    \rulename[c5]{Var}
+    \UnaryInfC{$?f:α_2,?x:α_4 \vdash ?x:α_7$}
+    \rulename[c3]{App}
+    \BinaryInfC{$?f:α_2,?x:α_4 \vdash ?f~?x: α_5$}
+    \rulename[c2]{Abs}
+    \UnaryInfC{$?f:α_2 \vdash λ?x.~?f~?x:α_3$}
+    \rulename[c1]{Abs}
+    \UnaryInfC{$\vdash λ?f.~λ?x.~?f~?x:α_1$}
+  \end{prooftree}
+  \begin{align*}
+    C = &\left\{
+      \begin{array}{@{}l}
+        {\color{c1}α_1=α_2→α_3}, {\color{c2}α_3=α_4→α_5}, \\
+        {\color{c3}α_6=α_7→α_5}, {\color{c4}α_2=α_6}, {\color{c5}α_4=α_7}
+      \end{array}
+      \right\} \\
+    σ_C = &\left[
+      \begin{array}{@{}l}
+        α_1 ⇒ (α_7→α_5)→α_7→α_5, α_2 ⇒ α_7→α_5, \\
+        α_3 ⇒ α_7→α_5, α_4 ⇒ α_7, α_6 ⇒ α_7→α_5
+      \end{array}
+      \right] \\
+    σ_C(α_1) = &(α_7→α_5)→α_7→α_5
+  \end{align*}
+\end{frame}
+
+\spickzettel
+
+\begin{frame}
+  \frametitle{Typinferenz $t_3$}
+  \[t_3 = λ?f.~λ?x.~?f~(?f~?x)\]
+  \pause
+  \begin{tiny}\let\rulenamesize=\tiny
+    \begin{prooftree}
+      \AxiomC{$(?f:α_2,?x:α_4)(?f)=α_6$}
+      \rulename[c4]{Var}
+      \UnaryInfC{$?f:α_2,?x:α_4 \vdash ?f:α_6$}
+      \AxiomC{$(?f:α_2,?x:α_4)(?f)=α_8$}
+      \rulename[c6]{Var}
+      \UnaryInfC{$?f:α_2,?x:α_4 \vdash ?f:α_8$}
+      \AxiomC{$(?f:α_2,?x:α_4)(?x)=α_9$}
+      \rulename[c7]{Var}
+      \UnaryInfC{$?f:α_2,?x:α_4 \vdash ?x:α_9$}
+      \rulename[c5]{App}
+      \BinaryInfC{$?f:α_2,?x:α_4 \vdash ?f~?x:α_7$}
+      \rulename[c3]{App}
+      \BinaryInfC{$?f:α_2,?x:α_4 \vdash ?f~(?f~?x): α_5$}
+      \rulename[c2]{Abs}
+      \UnaryInfC{$?f:α_2 \vdash λ?x.~?f~(?f~?x):α_3$}
+      \rulename[c1]{Abs}
+      \UnaryInfC{$\vdash λ?f.~λ?x.~?f~(?f~?x):α_1$}
+    \end{prooftree}
+  \end{tiny}
+  \begin{align*}
+    C = &\left\{
+      \begin{array}{@{}l}
+        {\color{c1}α_1=α_2→α_3}, {\color{c2}α_3=α_4→α_5}, \\
+        {\color{c3}α_6=α_7→α_5}, {\color{c4}α_2=α_6}, \\
+        {\color{c5}α_8=α_9→α_7}, {\color{c6}α_2=α_8}, {\color{c7}α_4=α_9}
+      \end{array}
+      \right\} \\
+    σ_C = &\left[
+      \begin{array}{@{}l}
+        α_1 ⇒ (α_9→α_9)→α_9→α_9, α_2 ⇒ α_9→α_9, \\
+        α_3 ⇒ α_9→α_9, α_4 ⇒ α_9, α_5 ⇒ α_9, \\
+        α_6 ⇒ α_9→α_9, α_7 ⇒ α_9, α_8 ⇒ α_9→α_9
+      \end{array}
+      \right] \\
+    σ_C(α_1) = &(α_9→α_9)→α_9→α_9
+  \end{align*}
+\end{frame}
+
+\spickzettel
+
+\begin{frame}
+  \frametitle{Typinferenz $t_4$}
+  \[t_4 = λ?x.~λ?y.~?y~(?x~?y)\]
+  \pause
+  \begin{tiny}\let\rulenamesize=\tiny
+    \begin{prooftree}
+      \AxiomC{$(?x:α_2,?y:α_4)(?y)=α_6$}
+      \rulename[c4]{Var}
+      \UnaryInfC{$?x:α_2,?y:α_4 \vdash ?y:α_6$}
+      \AxiomC{$(?x:α_2,?y:α_4)(?x)=α_8$}
+      \rulename[c6]{Var}
+      \UnaryInfC{$?x:α_2,?y:α_4 \vdash ?x:α_8$}
+      \AxiomC{$(?x:α_2,?y:α_4)(?y)=α_9$}
+      \rulename[c7]{Var}
+      \UnaryInfC{$?x:α_2,?y:α_4 \vdash ?y:α_9$}
+      \rulename[c5]{App}
+      \BinaryInfC{$?x:α_2,?y:α_4 \vdash ?x~?y:α_7$}
+      \rulename[c3]{App}
+      \BinaryInfC{$?x:α_2,?y:α_4 \vdash ?y~(?x~?y): α_5$}
+      \rulename[c2]{Abs}
+      \UnaryInfC{$?x:α_2 \vdash λ?y.~?y~(?x~?y):α_3$}
+      \rulename[c1]{Abs}
+      \UnaryInfC{$\vdash λ?x.~λ?y.~?y~(?x~?y):α_1$}
+    \end{prooftree}
+  \end{tiny}
+  \begin{align*}
+    C = &\left\{
+      \begin{array}{@{}l}
+        {\color{c1}α_1=α_2→α_3}, {\color{c2}α_3=α_4→α_5}, \\
+        {\color{c3}α_6=α_7→α_5}, {\color{c4}α_4=α_6}, \\
+        {\color{c5}α_8=α_9→α_7}, {\color{c6}α_2=α_8}, {\color{c7}α_4=α_9}
+      \end{array}
+      \right\} \\
+    σ_C = &\left[
+      \begin{array}{@{}l}
+        α_1 ⇒ ((α_7→α_5)→α_7)→(α_7→α_5)→α_5, \\
+        α_2 ⇒ (α_7→α_5)→α_7, α_3 ⇒ (α_7→α_5)→α_5, \\
+        α_4 ⇒ α_7→α_5, α_6 ⇒ α_7→α_5, \\
+        α_8 ⇒ (α_7→α_5)→α_7, α_9 ⇒ α_7→α_5
+      \end{array}
+      \right] \\
+    σ_C(α_1) = &((α_7→α_5)→α_7)→(α_7→α_5)→α_5
+  \end{align*}
+\end{frame}
+
 \end{document}
