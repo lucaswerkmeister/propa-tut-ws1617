@@ -242,4 +242,20 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Typabstraktion}
+  In der Typabstraktion $\mathit{ta}(τ,Γ)$ werden nicht \emph{alle} freien Typvariablen von $τ$ quantifiziert,
+  sondern nur die, die nicht frei in den Typannahmen $Γ$ vorkommen.
+  
+  Überlegen Sie anhand des $λ$-Terms $λ?x.~\Let ?y=?x \In ?y~?x$, was passiert,
+  wenn man diese Beschränkung aufhebt!
+  \pause
+  
+  Ohne diese Beschränkung lässt sich für den gesamten Ausdruck der Typ $α→β$ nachweisen,
+  indem man im $\texttt{\textbf{in}}$-Teil das fälschlicherweise allquantifizierte $y:∀α.α$ mit $α→β$ instanziiert.
+  Tatsächlich reduziert der Ausdruck aber zu einer Selbstapplikation,
+  die bekanntlich nicht typisierbar ist –
+  der Typ kann also nicht stimmen!
+\end{frame}
+
 \end{document}
