@@ -99,7 +99,8 @@
 % phantom \ast, for alignment of ⇒ and ⇒*
 \newcommand{\past}[0]{{\phantom{\ast}}}
 
-\newcommand{\rulename}[1]{\LeftLabel{\textsc{#1}}}
+\let\rulenamesize=\small
+\newcommand{\rulename}[2][black]{\LeftLabel{\color{#1}\rulenamesize{\textsc{#2}}}}
 
 \newcommand{\ctrue}[0]{\vl{c_{\text{true}}}}
 \newcommand{\cfalse}[0]{\vl{c_{\text{false}}}}
