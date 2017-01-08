@@ -258,4 +258,193 @@
   der Typ kann also nicht stimmen!
 \end{frame}
 
+\begin{frame}
+  \frametitle{Typinferenz mit \textbf\tlet-Polymorphismus}
+  Um einen \lstinline{let}-Ausdruck zu typisieren, müssen wir eine Typabstraktion $\mathit{ta}(τ_1, Γ)$ durchführen –
+  wenn wir aber ständig neue Variablen einführen, kriegen wir dabei das falsche Ergebnis.
+  
+  \only<1>{
+    \begin{prooftree}
+      \AxiomC{…}
+      \UnaryInfC{$Γ \vdash … : α_2$}
+      \AxiomC{$Γ, f : \mathit{ta}(α_2, Γ) \vdash f~x : α_3$}
+      \rulename{Let}
+      \BinaryInfC{$Γ \vdash \Let f = … \In f~x : α_1$}
+    \end{prooftree}
+  }
+  \only<2>{
+    \begin{prooftree}
+      \AxiomC{…}
+      \UnaryInfC{$Γ \vdash … : α_2$}
+      \AxiomC{$σ_\tlet(Γ), f : \mathit{ta}(σ_\tlet(α_2), σ_\tlet(Γ)) \vdash f~x : α_3$}
+      \rulename{Let}
+      \BinaryInfC{$Γ \vdash \Let f = … \In f~x : α_1$}
+    \end{prooftree}
+  }
+  
+  \pause
+  Stattdessen müssen wir die linke Seite vollständig typisieren, bevor wir mit der rechten Seite fortfahren.
+  Wir bestimmen für die Constraints $C_\tlet$ der linken Seite einen Unifikator $σ_\tlet$.
+  Rechts verwenden wir dann $Γ' = σ_\tlet(Γ), f : \mathit{ta}(σ_\tlet(α_2), σ_\tlet(Γ))$,
+  und die Constraints $C_\tlet$ ersetzen wir durch $C'_\tlet = \{ α_i = σ_\tlet(α_i) | \text{$σ_\tlet$ definiert für $α_i$} \}$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typinferenz mit \textbf\tlet-Polymorphismus}
+  %Bestimme allgemeinsten Typ für $\Let ?k = λ?x.~λ?y.~?x \In ?k~?a~(?k~?b~?c)$
+  %unter der Typannahme $Γ = ?a:\Tint, ?b:\Tbool, ?c:\Tchar$.
+  Typisiere $\Let ?f = λ?x.~1 \In ?f~(?f~\ctrue)$ (wobei $Γ=∅$).
+  \begin{enumerate}
+  \item \textsc{Let}-Regel anwenden; $C_0$ einsammeln
+  \item linke Seite typisieren; $C_\tlet$ einsammeln, $σ_\tlet$ bestimmen
+  \item $C'_\tlet, Γ'$ bestimmen
+  \item rechte Seite typisieren; $C_1$ einsammeln
+  \item $C=C'_\tlet∪C_0∪C_1$ aufstellen, $σ_C$ bestimmen
+  \item $σ_C(α_1)$ ausrechnen
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typinferenz mit \textbf\tlet-Polymorphismus Spickzettel}
+  \begin{multicols}{2}
+    \begin{prooftree}
+      \AxiomC{$c \in \lambdaval{Const}$}
+      \rulename{Const}
+      \UnaryInfC{$Γ \vdash c : α_i$}
+    \end{prooftree}
+    \break
+    $α_i = τ_c$
+  \end{multicols}
+  
+  \begin{multicols}{2}
+    \begin{prooftree}
+      %\AxiomC{$(Γ, x : α_i)(x) = α_i$}
+      %\AxiomC{$α_i \succeq α_i'$}
+      %\rulename{Var}
+      %\BinaryInfC{$(Γ, x : α_i) \vdash x : α_j$}
+      \AxiomC{$\begin{array}{@{}c@{}}
+          (Γ, x : α_i)(x) = α_i \\
+          α_i \succeq α_i'
+        \end{array}$}
+      \rulename{Var}
+      \UnaryInfC{$(Γ, x : α_i) \vdash x : α_j$}
+    \end{prooftree}
+    \break
+    \vspace*{\fill}
+    $α_i' = α_j$
+    \vspace*{\fill}
+  \end{multicols}
+  
+  \begin{multicols}{2}
+    \begin{prooftree}
+      \AxiomC{$Γ, x : α_j \vdash t : α_k$}
+      \rulename{Abs}
+      \UnaryInfC{$Γ \vdash λ x.~t : α_i$}
+    \end{prooftree}
+    \break
+    $α_i = α_j → α_k$
+  \end{multicols}
+  
+  \begin{multicols}{2}
+    \begin{prooftree}
+      \AxiomC{$Γ \vdash t_1 : α_k$}
+      \AxiomC{$Γ \vdash t_2 : α_j$}
+      \rulename{App}
+      \BinaryInfC{$Γ \vdash t_1~t_2 : α_i$}
+    \end{prooftree}
+    \break
+    $α_k = α_j → α_i$
+  \end{multicols}
+  
+  \begin{multicols}{2}
+    \begin{prooftree}
+      \AxiomC{$\overbrace{Γ \vdash t_1 : α_j}^{\mathclap{\text{liefert $C_\tlet,σ_\tlet,C'_\tlet$}}}$}
+      \AxiomC{$\overbrace{Γ' \vdash t_2 : α_k}^{\text{liefert $C_1$}}$}
+      \rulename{Let}
+      \BinaryInfC{$Γ \vdash \Let x = t_1 \In t_2 : α_i$}
+    \end{prooftree}
+    \break
+    \begin{align*}
+      Γ' &= σ_\tlet(Γ), x : \mathit{ta}(σ_\tlet(α_j), σ_\tlet(Γ)) \\
+      C_0 &= \{ α_i = α_k \} \\
+      C &= C'_\tlet ∪ C_0 ∪ C_1
+    \end{align*}
+  \end{multicols}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typinferenz mit \textbf\tlet-Polymorphismus}
+  \begin{tiny}\let\rulenamesize=\tiny
+    \def\labelSpacing{1pt}
+    \def\defaultHypSeparation{\hskip 3pt}
+    \begin{prooftree}
+      \AxiomC{$1 ∈ \mathit{Const}$}
+      \rulename[c3]{Const}
+      \UnaryInfC{$\vdash ?x:α_3 \vdash 1:α_4$}
+      \rulename[c2]{Abs}
+      \UnaryInfC{$\vdash λ?x.~1:α_2$}
+      \AxiomC{$\begin{array}{@{}c@{}}
+          Γ'(?f)=∀α_3.α_3→\Tint \\
+          ∀α_3.α_3→\Tint \succeq α_3'→\Tint
+        \end{array}$}
+      \rulename[c5]{Var}
+      \UnaryInfC{$Γ' \vdash ?f:α_6$}
+      \AxiomC{$\begin{array}{@{}c@{}}
+          Γ'(?f)=∀α_3.α_3→\Tint \\
+          ∀α_3.α_3→\Tint \succeq α_3''→\Tint
+        \end{array}$}
+      \rulename[c7]{Var}
+      \UnaryInfC{$Γ' \vdash ?f:α_8$}
+      \AxiomC{$\ctrue ∈ \mathit{Const}$}
+      \rulename[c8]{Const}
+      \UnaryInfC{$Γ' \vdash \ctrue:α_9$}
+      \rulename[c6]{App}
+      \BinaryInfC{$Γ' \vdash ?f~\ctrue:α_7$}
+      \rulename[c4]{App}
+      \BinaryInfC{$Γ' \vdash ?f~(?f~\ctrue):α_5$}
+      \rulename[c1]{Let}
+      \BinaryInfC{$\vdash \Let ?f=λ?x.~1 \In ?f~(?f~\ctrue):α_1$}
+    \end{prooftree}
+  \end{tiny}
+  \begin{align*}
+    C_\tlet &= \{ {\color{c2}α_2 = α_3→α_4}, {\color{c3}α_4 = \Tint} \} \\
+    σ_\tlet &= [α_2 ⇒ α_3→\Tint, α_4 ⇒ \Tint] \\
+    C'_\tlet &= \{ α_2 = α_3→\Tint, α_4 = \Tint \} \\
+    Γ &= ∅ \\
+    Γ' &= \underbrace{σ_\tlet(Γ)}_∅, ?f : \underbrace{\mathit{ta}(\underbrace{σ_\tlet(α_2)}_{α_3→\Tint}, \underbrace{σ_\tlet(Γ)}_∅)}_{∀α_3. α_3→\Tint} = ?f : ∀α_3. α_3→\Tint \\
+    C_0 &= \{ {\color{c1}α_1 = α_5} \}
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typinferenz mit \textbf\tlet-Polymorphismus}
+  \begin{align*}
+    C_1 &= \left\{
+      \begin{array}{@{}r@{\,}l}
+        \color{c4} α_6 &\color{c4}= α_7→α_5 \\
+        \color{c5} α_6 &\color{c5}= α_3'→\Tint \\
+        \color{c6} α_8 &\color{c6}= α_9→α_7 \\
+        \color{c7} α_8 &\color{c7}= α_3''→\Tint \\
+        \color{c8} α_9 &\color{c8}= \Tbool
+      \end{array}
+    \right\}
+    &
+    σ_C &= \left[
+      \begin{array}{@{}r@{\,}l}
+        α_9 &⇒ \Tbool, \\
+        α_8 &⇒ \Tbool→\Tint, \\
+        α_3'' &⇒ \Tbool, \\
+        α_7 &⇒ \Tint, \\
+        α_6 &⇒ \Tint→\Tint, \\
+        α_3' &⇒ \Tint \\
+        α_5 &⇒ \Tint, \\
+        α_1 &⇒ \Tint, \\
+        α_2 &⇒ α_3→\Tint, \\
+        α_4 &⇒ \Tint
+      \end{array}
+    \right]
+  \end{align*}
+  \[σ_C(α_1) = \Tint\]
+\end{frame}
+
 \end{document}
