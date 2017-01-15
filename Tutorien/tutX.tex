@@ -212,4 +212,190 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Musik}
+  Wenn wir ein Tonsignal (etwa eine Sinuswelle) gegeben haben,
+  können wir daraus eine Sound-Datei produzieren,
+  indem wir die Datei abtasten und die einzelnen \emph{Samples} in einer \texttt{.wav}-Datei speichern.
+  
+  Im vorgegebenen Framework repräsentiert der Datentyp
+  \begin{lstlisting}
+    data Signal = Signal [Double] deriving (Show, Eq)
+  \end{lstlisting}
+  einen Strom von Samples (jeweils im Bereich $[-1,1]$).
+  Mit der Funktion \lstinline{writeWave} kann das Signal in eine Datei geschrieben werden.
+  Die Samplerate von \SI{44100}{\hertz} ist in der Konstante \lstinline{sampleRate :: Double} gespeichert,
+  außerdem kann mit einer Funktion \lstinline{time2samples :: Double -> Double} von Sekunden zu Samples konvertiert werden.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{constant}, \lstinline{silence}}
+  Schreibe zwei Generatoren für unendliche, konstante Signale:
+  \begin{lstlisting}
+    constant :: Double -> Signal
+    silence :: Signal
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    constant x = Signal (repeat x)
+    silence = constant 0
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{sine}}
+  Schreibe Generator für Sinuswelle der gegebenen Frequenz in Hertz.
+  (Anpassung an Samplerate nicht vergessen!)
+  \begin{lstlisting}
+    sine :: Double -> Signal
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    time2rad f = 2*pi*f/sampleRate
+    
+    sine f = map scaledSin [0..]
+      where scaledSin t = sin (time2rad (t*freq))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{trim}}
+  \lstinline{trim signal t} soll das Signal \lstinline{signal} nach \lstinline{t} Sekunden abschneiden.
+  Diese Funktion kann dabei nützlich sein:
+  \begin{lstlisting}
+    double2int = fromInteger . floor
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    trim (Signal signal) t = Signal (take samples signal)
+      where samples = double2int $ time2samples t
+  \end{lstlisting}
+  Damit können wir einen einsekündigen Kammerton A erzeugen und anhören:
+  \begin{lstlisting}
+    writeWave "a.wav" (sine 440 `trim` 1.0)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{Num}, \lstinline{Fractional}}
+  Implementiere die Typklassen \lstinline{Num} (\lstinline{+}, \lstinline{-}, \lstinline{*}, \lstinline{abs}, \lstinline{signum}, \lstinline{fromInteger})
+  und \lstinline{Fractional} (\lstinline{/}, \lstinline{fromRational}) für \lstinline{Signal},
+  damit wir mit Signalen direkt rechnen können.
+  \pause
+  \begin{lstlisting}
+    instance Num Signal where
+      (Signal s1) + (Signal s2) = Signal (zipWith (+) s1 s2)
+      (Signal s1) - (Signal s2) = Signal (zipWith (-) s1 s2)
+      (Signal s1) * (Signal s2) = Signal (zipWith (*) s1 s2)
+      abs (Signal signal)    = Signal (map abs signal)
+      signum (Signal signal) = Signal (map signum signal)
+      fromInteger i          = constant (fromInteger i)
+    
+    instance Fractional Signal where
+      (Signal s1) / (Signal s2) = Signal (zipWith (/) s1 s2)
+      fromRational x         = constant (fromRational x)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{integrate}}
+  Um künstliche Instrumente mit \emph{Frequenzmodulation} zu erzeugen,
+  brauchen wir zunächst eine Funktion,
+  um ein Signal zu integrieren (über Trapezintegration,
+  die Höhe eines Abschnitts ist also immer die Mitte der zwei umgebenden Samples).
+  \begin{lstlisting}
+    integrate :: Signal -> Signal
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    integrate (Signal s) = Signal (integrateSignal 0 0 s)
+      where integrateSignal acc y [] = []
+            integrateSignal acc y (x:xs) =
+              acc : integrateSignal
+                    (acc + (x+y)/2 * 1/sampleRate) x xs
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{modulatedSine}}
+  Jetzt wollen wir folgendes Signal generieren:
+  \[u_t = \sin\left(2 \uppi c \cdot t + c \cdot \int_0^t m_τ \mathrm dτ\right)\]
+  Dabei ist $c$ die Trägerfrequenz, auf die das Modulationssignal $m$ addiert wird.
+  \pause
+  \begin{lstlisting}
+    modulatedSine freq s = modul (integrate s)
+      where
+        modul (Signal s') = Signal (zipWith combine s' [0..])
+        combine df t = sin (freq * (time2rad t + df))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{rampUp}}
+  Mit \lstinline{rampUp :: Double -> Signal} soll ein Signal erzeugt werden,
+  das in der angegebenen Zeit (in Sekunden) von 0 auf 1 steigt.
+  \input{../../programmierparadigmen-tutoren/uebungsaufgaben/Funktional/sound/rampup.tex}
+  \pause
+  \begin{lstlisting}
+    rampUp 0 = Signal [] -- Vermeide Division durch 0 unten
+    rampUp t = Signal (map (/samples) [0..samples])
+    where samples = time2samples t
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{ramp}}
+  \lstinline{ramp from to time} soll als Erweiterung von \lstinline{rampTo} ein Signal generieren,
+  das innerhalb von \lstinline{time} vom Level \lstinline{from} zu \lstinline{to} steigt (oder fällt).
+  \pause
+  \begin{lstlisting}
+    ramp from to time =
+      (constant from) +
+      ((rampUp time) * (constant (to-from)))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{append}}
+  \lstinline{append} soll zwei Signale aneinanderhängen.
+  \pause
+  \begin{lstlisting}
+    append (Signal s1) (Signal s2) = Signal (s1 ++ s2)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hullCurve}}
+  Jetzt können wir eine Hüllkurve implementieren.
+  \lstinline{hullCurve attack decay decayLevel release}
+  soll die abgebildete Hüllkurve generieren.
+  \input{../../programmierparadigmen-tutoren/uebungsaufgaben/Funktional/sound/hullcurve.tex}
+  \pause
+  \begin{lstlisting}
+    hullCurve attack decay decayLevel release
+      = (rampUp attack) `append`
+        (ramp 1.0 decayLevel decay) `append`
+        (ramp decayLevel 0.0 release)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{play}}
+  Zu guter Letzt soll jetzt noch eine Sequencer-Funktion implementiert werden:
+  sie nimmt ein Instrument (macht Frequenz zu Signal)
+  und eine Liste von Noten mit Länge entgegen
+  und setzt sie zu einem langen Signal zusammen.
+  \begin{lstlisting}
+    play :: (Double -> Signal) -> [(Double,Double)] -> Signal
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+    play instrument notes
+      = foldr (append . note) (Signal []) notes
+      where note (0,dur) = silence `trim` dur -- ?
+            note (f,dur) = ((instrument f) `append` silence)
+                           `trim` dur
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
