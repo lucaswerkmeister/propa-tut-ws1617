@@ -12,4 +12,204 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Tutorenrätsel}
+  Schreibe ein Prolog-Programm, das folgendes Rätsel löst:
+  \begin{table}
+    \begin{tabular}{|c|c|c|c|c|}\hline
+      & Position 1 & Position 2 & Position 3 & Position 4 \\\hline
+      Name &&&& \\\hline
+      Lieblingsspiel &&&& \\\hline
+      programmiert gern in… &&&& \\\hline
+      Lieblingsalgorithmus &&&& \\\hline
+    \end{tabular}
+  \end{table}
+  \begin{enumerate}
+  \item Der Tutor, dessen Lieblingsalgorithmus Bogosort ist, befindet sich links von dem Tutor, der am liebsten in Ceylon programmiert.
+  \item Der Tutor, der gern Antichamber spielt, befindet sich links von dem Tutor, der gern in C\# programmiert.
+  \item …
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{indexOf}}
+  Implementiere Prädikat \lstinline{indexOf},
+  wobei \lstinline{indexOf(E, L, N)} genau dann gilt,
+  wenn \lstinline{E} in der Liste \lstinline{L} an Stelle \lstinline{N} steht.
+  \pause
+  \begin{lstlisting}
+    indexOf(X, [X|_], 0).
+    indexOf(X, [_|Xs], N) :- indexOf(X, Xs, M), N is M+1.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{solution}}
+  Implementiere Prädikat \lstinline{solution},
+  das die Lösung des Rätsels berechnet.
+  Lösung wird als Liste von Listen
+  \begin{lstlisting}
+    [[_,_,_,_],[_,_,_,_],[_,_,_,_],[_,_,_,_]]
+  \end{lstlisting}
+  modelliert,
+  mit den Listenelementen Name, Spiel, Programmiersprache, Algorithmus.
+  Implementiere jeden Hinweis als eigenes Prädikat.
+  \pause
+  \begin{lstlisting}
+    solution(S) :-
+    S = [[_,_,_,_],[_,_,_,_],[_,_,_,_],[_,_,_,_]],
+    clue1(S), clue2(S), clue3(S),
+    clue4(S), clue5(S), clue6(S),
+    clue7(S), clue8(S), clue9(S).
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue1}}
+  \begin{quote}
+    Der Tutor, dessen Lieblingsalgorithmus Bogosort ist, befindet sich links von dem Tutor, der am liebsten in Ceylon programmiert.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue1(Solution) :-
+      indexOf([_,_,_,bogosort], Solution, N1),
+      indexOf([_,_,ceylon,_], Solution, N2),
+      N1 < N2.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue2}}
+  \begin{quote}
+    Der Tutor, der gern Antichamber spielt, befindet sich links von dem Tutor, der gern in C\# programmiert.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue2(Solution) :-
+      indexOf([_,antichamber,_,_], Solution, N1),
+      indexOf([_,_,csharp,_], Solution, N2),
+      N1 < N2.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue3}}
+  \begin{quote}
+    Mindestens ein Tutor steht zwischen Henning und dem Tutor, der gern Donkey Kong Country spielt.    
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue3(Solution) :-
+	  indexOf([henning,_,_,_], Solution, N1),
+	  indexOf([_,donkeykongcountry,_,_], Solution, N2),
+	  AbsDiff is abs(N2 - N1),
+	  AbsDiff >= 2.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue4}}
+  \begin{quote}
+    Mindestens ein Tutor befindet sich rechts von dem Tutor, der gern Gothic 1 spielt, und gleichzeitig links von dem Tutor, der gern den Boyer-Moore-Algorithmus zum String-Matching verwendet.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue4(Solution) :-
+	  indexOf([_,gothic,_,_], Solution, N1),
+	  indexOf([_,_,_,boyermoore], Solution, N2),
+	  Diff is N2 - N1,
+	  Diff >= 2.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue5}}
+  \begin{quote}
+    Der Tutor, der am liebsten in Scala programmiert, steht direkt neben dem Tutor, der gern Donkey Kong Country spielt.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue5(Solution) :-
+      indexOf([_,_,scala,_], Solution, N1),
+      indexOf([_,donkeykongcountry,_,_], Solution, N2),
+      AbsDiff is abs(N2 - N1),
+      AbsDiff == 1.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue6}}
+  \begin{quote}
+    Der Tutor, der am liebsten mit dem Tarjan-Algorithmus starke Zusammenhangskomponenten sucht, steht direkt links neben Tobias.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue6(Solution) :-
+      indexOf([_,_,_,tarjan], Solution, N1),
+      indexOf([tobias,_,_,_], Solution, N2),
+      N2 is N1 + 1.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue7}}
+  \begin{quote}
+    Zwischen dem TypeScript-Programmierer und Lucas stehen genau zwei Tutoren.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue7(Solution) :-
+      indexOf([_,_,typescript,_], Solution, N1),
+      indexOf([lucas,_,_,_], Solution, N2),
+	  AbsDiff is abs(N2-N1),
+	  AbsDiff == 3.
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue8}}
+  \begin{quote}
+    Der Tutor, der direkt rechts neben Jonas steht, spielt gerne Tiny Tiger.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue8(Solution) :-
+      indexOf([jonas,_,_,_], Solution, N1),
+      N2 is N1 + 1,
+      indexOf([_,tinytiger,_,_], Solution, N2).
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \prolog
+  \frametitle{\lstinline{clue9}}
+  \begin{quote}
+    Derjenige Tutor, der am liebsten optimale Züge mit dem Minimax-Verfahren mit Alpha-Beta-Pruning findet, spielt gern Gothic 1.
+  \end{quote}
+  \small{(Reihenfolge: Name, Spiel, Programmiersprache, Algorithmus)}
+  \pause
+  \begin{lstlisting}
+    clue9(Solution) :-
+      member([_,gothic,_,alphabeta], Solution).
+  \end{lstlisting}
+\end{frame}
+
 \end{document}
