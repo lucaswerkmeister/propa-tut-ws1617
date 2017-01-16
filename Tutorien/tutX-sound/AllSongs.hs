@@ -5,6 +5,7 @@ import Song2
 import Song3
 import Song4
 import SongsVideoGames
+import SongFanfare
 
 songs :: [(FilePath, Signal)]
 songs = [("song.wav", Song.song),
@@ -16,7 +17,8 @@ songs = [("song.wav", Song.song),
          ("songMegaMan.wav", songMegaMan),
          ("songTetris.wav", songTetris),
          ("songNecrodancerLevel4_3.wav", songNecrodancerLevel4_3),
-         ("songNecrodancerDeathMetal.wav", songNecrodancerDeathMetal)
+         ("songNecrodancerDeathMetal.wav", songNecrodancerDeathMetal),
+         ("songFanfare.wav", fanfare)
         ]
 
 writeAllSongs :: IO ()
