@@ -253,7 +253,7 @@
   \begin{lstlisting}
     time2rad f = 2*pi*f/sampleRate
     
-    sine f = map scaledSin [0..]
+    sine f = Signal $ map scaledSin [0..]
       where scaledSin t = sin (time2rad (t*freq))
   \end{lstlisting}
 \end{frame}
@@ -268,7 +268,7 @@
   \pause
   \begin{lstlisting}
     trim (Signal signal) t = Signal (take samples signal)
-      where samples = double2int $ time2samples t
+      where samples = double2int $ time2Samples t
   \end{lstlisting}
   Damit können wir einen einsekündigen Kammerton A erzeugen und anhören:
   \begin{lstlisting}
