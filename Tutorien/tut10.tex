@@ -129,4 +129,45 @@
   \lstinputlisting[linerange={6-24}]{tut10/task3-2-sol.c}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{MPI: Scatter \& Allgather}
+  In einem Aufruf
+  \begin{lstlisting}
+    int MPI_Scatter(void *sbuf, int scount, MPI_Datatype styp,
+                    void *rbuf, int rcount, MPI_Datatype rtyp,
+                    int root, MPI_Comm comm)
+  \end{lstlisting}
+  bestimmt \lstinline{scount}, wie viele Elemente an jeden einzelnen Prozess in \lstinline{comm} gesendet werden.
+  
+  Im folgenden Programmstück seien \lstinline{buf_1} und \lstinline{buf_2} hinreichend große Puffer, \lstinline{k} $≥2$ und \lstinline{c} die Anzahl an Prozessen in \lstinline{comm}.
+  \begin{lstlisting}
+    MPI_Scatter  (buf_1, k, MPI_INT,
+                  buf_2, k, MPI_INT,
+                  0, comm);
+    MPI_Allgather(buf_2, k, MPI_INT,
+                  buf_1, k, MPI_INT,
+                     comm);
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{MPI: Scatter \& Allgather}
+  \begin{enumerate}
+  \item Welche Daten stehen nach Ausführung dieses Programmstücks in den Puffern der einzelnen Prozesse?
+    \begin{itemize}
+    \item
+      In \lstinline{buf_2} steht\only<1>{…}\onslide<2->{ in Prozess $p_j$ der Inhalt des Bereichs $j \cdot k$ bis $(j+1) \cdot k - 1$ von $p_0$s \lstinline{buf_1}.}
+    \item
+      In \lstinline{buf_1} steht\only<1-2>{…}\onslide<3->{ für jeden Prozess die Konkatenation der \lstinline{buf_2} aller Prozesse,
+      also der ursprüngliche Inhalt von $p_0$s \lstinline{buf_1}.}
+    \end{itemize}
+  \item Ersetze die beiden Aufrufe \lstinline{MPI_Scatter} und \lstinline{MPI_Allgather} durch einen Aufruf einer MPI-Methode,
+    so dass \lstinline{buf_1} danach den gleichen Inhalt hat.
+    \pause[4]
+    \begin{lstlisting}
+      MPI_Bcast(buf_1, c*k, MPI_INT, 0, comm);
+    \end{lstlisting}
+  \end{enumerate}
+\end{frame}
+
 \end{document}
