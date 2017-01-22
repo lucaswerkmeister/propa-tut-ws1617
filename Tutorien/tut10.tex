@@ -88,4 +88,24 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{MPI: Reduce}
+  Analysiere folgendes MPI-Programm, welches mit 4 Prozessen ausgeführt wird.
+  Welche Werte enthalten \lstinline{sendbuffer} und \lstinline{recvbuffer} am Ende?
+  \lstinputlisting[linerange={9-21}]{tut10/task3-1.c}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MPI: Reduce}
+  \begin{table}
+    \begin{tabular}{r|l l l l}
+      \lstinline{sendbuffer} bei Rank 0 &       0 & 1 & 2 & 3 \\
+      \lstinline{sendbuffer} bei Rank 1 &       1 & 2 & 3 & 4\\
+      \lstinline{sendbuffer} bei Rank 2 &       2 & 3 & 4 & 5 \\
+      \lstinline{sendbuffer} bei Rank 3 &       3 & 4 & 5 & 6 \\
+      \lstinline{recvbuffer} bei Rank 0 &\pause 6 & 10 & 14 & 18 \\
+    \end{tabular}
+  \end{table}
+\end{frame}
+
 \end{document}
