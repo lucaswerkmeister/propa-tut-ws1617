@@ -40,4 +40,52 @@
   \end{description}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{MPI: Punkt-zu-Punkt-Kommunikation}
+  Eine Firma entwickelt folgendes MPI-Programm,
+  welches dafür vorgesehen ist, von zwei MPI-Prozessen ausgeführt zu werden.
+
+  Während des Testens durch die Firma verhält sich das Programm wie erwartet.
+  Nach der Auslieferung beschweren sich die Kunden jedoch prompt darüber, dass das Programm hängenbleibt.
+
+  \begin{enumerate}
+  \item Wieso bleibt das Programm hängen?
+  \item Finde möglichst viele Lösungen, das Programm zu verändern, so dass es korrekt funktioniert.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MPI: Punkt-zu-Punkt-Kommunikation}
+  \lstinputlisting[linerange={6-7,9-22,24-27}]{tut10/task2.c}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MPI: Punkt-zu-Punkt-Kommunikation – 1}
+  Das Programm bleibt hängen, weil beide Prozesse zunächst \lstinline{MPI_Send} und dann \lstinline{MPI_Recv} aufrufen.
+  Wenn der \lstinline{MPI_Send}-Aufruf blockiert, bis die Übertragung durch \lstinline{MPI_Recv} am anderen Ende stattfinden kann,
+  dann warten beide Prozesse darauf, dass der jeweils andere \lstinline{MPI_Recv} aufruft, ohne dies jedoch selbst zu tun.
+  
+  Beim Testen in der Firma wurde offenbar eine andere MPI-Implementierung verwendet,
+  welche im Standardmodus puffert, d.\,h., \lstinline{MPI_Send} überträgt die Daten in einen Puffer,
+  danach geht die Ausführung allerdings weiter, ohne auf \lstinline{MPI_Recv} zu warten.
+\end{frame}
+
+\begin{frame}
+  \frametitle{MPI: Punkt-zu-Punkt-Kommunikation – 2}
+  \begin{itemize}
+  \item Kreis aufbrechen:
+    Ein Prozess ruft \lstinline{MPI_Recv} vor \lstinline{MPI_Send} auf.
+  \item Explizit puffern:
+    Puffer mit \lstinline{MPI_Buffer_attach} bereitstellen,
+    \lstinline{MPI_Bsend} verwenden.
+  \item Asynchron senden:
+    \lstinline{MPI_ISend} verwenden.
+    Wichtig: anderen Puffer für \lstinline{MPI_Recv} verwenden –
+    der Puffer für \lstinline{MPI_Isend} darf nicht verändert werden, bis die Übertragung abgeschlossen ist!
+  \item Sende- und Empfangsoperation kombinieren:
+    \lstinline{MPI_Sendrecv} oder \lstinline{MPI_Sendrecv_replace} verwenden.
+  \item …
+  \end{itemize}
+\end{frame}
+
 \end{document}
