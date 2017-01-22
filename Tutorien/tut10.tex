@@ -108,4 +108,25 @@
   \end{table}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{MPI: Reduce – \lstinline{my_int_sum_reduce}}
+  Implementiere mit Hilfe von \lstinline{MPI_Send}, \lstinline{MPI_Recv}, \lstinline{MPI_Comm_size} und \lstinline{MPI_Comm_rank} folgende Funktion:
+  \lstinputlisting[linerange={3-4}]{tut10/task3-2-sol.c}
+  Die folgenden Aufrufe sollen dabei gleichbedeutend sein:
+  \begin{lstlisting}
+    my_int_sum_reduce(sendbuf, recvbuf, count,
+                      root, comm);
+    MPI_Reduce(sendbuf, recvbuf, count,
+               MPI_INT, MPI_SUM,
+               root, comm);
+  \end{lstlisting}
+  
+  \textbf{Hinweis:} Fehlerbehandlung unnötig; Aufrufe von \lstinline{MPI_Send} mit gleichem Sender und Empfänger vermeiden.
+\end{frame}
+
+\begin{frame}
+  \frametitle{MPI: Reduce – \lstinline{my_int_sum_reduce}}
+  \lstinputlisting[linerange={6-24}]{tut10/task3-2-sol.c}
+\end{frame}
+
 \end{document}
