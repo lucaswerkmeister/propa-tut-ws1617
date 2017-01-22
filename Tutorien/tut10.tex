@@ -25,4 +25,19 @@
   \lstinputlisting[linerange={1-1,3-15}]{tut10/task1.c}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{(c)gdb Spickzettel}
+  Wichtige Befehle:
+  \begin{description}\let\realitem=\item \renewcommand{\item}[1][]{\realitem[\textbf#1]}
+  \item[break] Breakpoint setzen
+  \item[run] Programm starten
+  \item[step] Programm einen Schritt weiterlaufen lassen
+  \item[next] Programm einen Schritt weiterlaufen lassen,
+    dabei Funktionsaufrufe überspringen
+  \item[print] Ausdruck auswerten und Ergebnis anzeigen
+  \item[continue] Programm weiterlaufen lassen
+  \item[list] Code an der aktuellen Stelle anzeigen lassen
+  \end{description}
+\end{frame}
+
 \end{document}
