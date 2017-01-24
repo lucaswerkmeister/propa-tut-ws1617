@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   
   int sendbuf[count];
   for (int i = 0; i < count; i++)
-    sendbuf[i] = i;
+    sendbuf[i] = i + my_rank;
   
   int recvbuf1[count], recvbuf2[count];
   my_int_sum_reduce(sendbuf, recvbuf1, count,                   root, MPI_COMM_WORLD);
