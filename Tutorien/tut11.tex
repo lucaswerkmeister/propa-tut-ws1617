@@ -153,4 +153,18 @@
   hat man \emph{Aktoren}, die einander Nachrichten schicken und auf Nachrichten reagieren.
 \end{frame}
 
+\begin{frame}
+  \frametitle{Design by Contract}
+  Bei \emph{Design by Contract} beschreibt eine Methode,
+  welche \emph{Vorbedingungen} sie benötigt, um korrekt zu funktionieren
+  (zum Beispiel: \lstinline{someParameter != null}, \lstinline{!someList.isEmpty()}),
+  und welche \emph{Nachbedingungen} sie in diesem Fall selbst garantiert.
+  
+  Einige formale Beweissysteme,
+  etwa das u.\,a. am KIT entwickelte \emph{KeY},
+  können beweisen, dass der Code einer Methode ihre Verträge tatsächlich erfüllt.
+  Durch Kombination der Verträge aller Methoden lässt sich dann beweisen,
+  dass ein ganzes Programm so funktioniert wie gewünscht.
+\end{frame}
+
 \end{document}
