@@ -14,4 +14,22 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Amdahlsches Gesetz}
+  Gegeben ist ein Pool mit $N$ Threads.
+  Davon sind \SI{90}{\percent} Leser, welche gleichzeitig auf einem Puffer arbeiten können,
+  und \SI{10}{\percent} Schreiber, welche exklusiven Zugriff auf den Puffer benötigen.
+  Jeder Leser benötigt \SI{2}{\second} und jeder Schreiber \SI{3}{\second} zur Ausführung.
+  Wo liegt gemäß Amdahls Gesetz die obere Grenze für den Speedup dieses Programms auf einem 4-Kern-Prozessor?
+  \pause
+  
+  \begin{align*}
+    S &= \frac{1}{\frac{P}{N} + (1-P)} & P&\text{: parallelisierbarer Anteil} \\
+    \onslide<3->{
+      P &= \frac{\num{2} \cdot \num{0.9}}{\num{2} \cdot \num{0.9} + \num{3} \cdot \num{0.1}} = \frac{\num{6}}{\num{7}} \approx \num{0.86} & N &= 4 \\
+      S &= \num{2.8}
+    }
+  \end{align*}
+\end{frame}
+
 \end{document}
