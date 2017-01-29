@@ -55,4 +55,17 @@
   Mergesort soll mit einem \lstinline{ForkJoinPool} in Java implementiert werden.
 \end{frame}
 
+\begin{frame}
+  \frametitle{Barriere}
+  Implementiere eine zyklische Barriere gemäß diesem Interface:
+  \lstinputlisting[linerange={3-6}]{tut11/barrier/IBarrier.java}
+  Einziger Konstruktorparameter ist die Anzahl an Threads,
+  die \lstinline{await} aufrufen müssen,
+  um die Barriere freizugeben.
+  \lstinline{freeAll} gibt die Barriere manuell frei;
+  alle aktuell wartenden Threads werden freigegeben
+  und alle, die danach \lstinline{await} aufrufen,
+  müssen wieder warten.
+\end{frame}
+
 \end{document}
