@@ -45,4 +45,14 @@
   \lstinputlisting[linerange={3-3,5-5,7-12,14-19,21-25}]{tut11/primes/DivisionSeq.java}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Mergesort}
+  Mergesort ist ein \emph{teile-und-herrsche}-Algorithmus und kann gut mit dem Fork/Join-Pattern implementiert werden.
+  Die zu sortierende Liste wird rekursiv in kleinere Listen zerlegt,
+  bis eine einzelne Liste einfach sortiert werden kann (z.\,B. einelementig).
+  Anschließend fügt man die Teile wieder in der richtigen Reihenfolge zusammen.
+  
+  Mergesort soll mit einem \lstinline{ForkJoinPool} in Java implementiert werden.
+\end{frame}
+
 \end{document}
