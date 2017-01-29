@@ -68,4 +68,81 @@
   müssen wieder warten.
 \end{frame}
 
+\begin{frame}
+  \frametitle{Urlaubsreservierungssystem}
+  Es soll ein System entwickelt werden,
+  in dem Mitarbeiter einer Firma Urlaub reservieren können.
+  Mitarbeiter sind in Buddy-Pärchen eingeteilt;
+  mindestens ein Mitarbeiter eines Paares muss immer arbeiten
+  (d.\,h., wenn ein Mitarbeiter Urlaub reserviert,
+  muss der Buddy in dieser Zeit arbeiten).
+  Der Einfachkeit halber seien Namen von Mitarbeitern eindeutig und Urlaub wird nur als ganzer Monat angefragt.
+  
+  Aufgabe ist es, die Methode \lstinline{VacationReservationSystem.tryTakeVacation} zu implementieren.
+  Für die ersten Aufgabenteile darf der restliche Code nicht verändert werden.
+\end{frame}
+
+\begin{frame}
+  \frametitle{\lstinline{synchronized}}
+  Implementiere \lstinline{VacationReservationSystem.tryTakeVacation}.
+  Versehe dabei die ganze Methode mit dem \lstinline{synchronized}-Modifikator.
+
+  Was ist der Nachteil dieser Implementierung?
+  
+  \pause
+  Diese Synchronisierung ist sehr grobgranular und kann zum Performanz-Engpass werden.
+\end{frame}
+
+\begin{frame}
+  \frametitle{\sout{\lstinline{synchronized}}}
+  Was kann passieren, wenn man \lstinline{synchronized} weglässt? Warum?
+  
+  \pause
+  Es kann passieren, dass beide Mitarbeiter eines Buddy-Paars gleichzeitig Urlaub reservieren.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Monitore}
+  Implementiere feingranularere Synchronisierung, indem \lstinline{EmployeeVacationRecord}s als Monitor-Objekte verwendet werden.
+  Betrete zuerst den Monitor für den aufrufenden Mitarbeiter und dann den für den Buddy.
+  Was passiert? Wieso?
+  
+  \pause
+  Deadlock, wenn beide Mitarbeiter eines Buddy-Paars den eigenen Monitor betreten und dann auf dem Buddy blockieren.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Monitore: Lösung}
+  Modifiziere diese Lösung, sodass kein Deadlock mehr auftritt.
+  
+  Was sind die Coffman-Bedingungen?
+  \pause
+  \begin{description}
+  \item[Mutual Exclusion]
+    Eine Ressource kann nur durch einen einzigen Prozess gleichzeitig verwendet werden;
+    nur ein Prozess darf sich gleichzeitig in der \emph{critical section} befinden.
+  \item[Hold And Wait]
+    Eine Prozess darf eine Ressource anfragen und dabei, während er darauf wartet, dass sie von einem anderen Prozess freigegeben wird, weitere Ressourcen halten.
+  \item[No Preemption]
+    Eine Ressource kann nur freiwillig durch den Prozess selbst freigegeben werden.
+  \item[Circular Wait]
+    Im Graph der Prozess-Ressourcen-Abhängigkeiten besteht ein Kreis.
+  \end{description}
+  
+  \pause
+  Sortiere die Mitarbeiter des Buddy-Paars alphabetisch nach Name
+  und betrete den ersten Mitarbeiter zuerst.
+  Dadurch entsteht kein \emph{Circular Wait}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimale Lösung}
+  Zum Schluss darf der gesamte Quelltext verwendet werden.
+  Wie könnte eine noch bessere Lösung aussehen?
+  
+  \pause
+  Zum Beispiel: pro Buddy-Pärchen nur ein Monitor,
+  der im \lstinline{EmployeeVacationRecord} hinterlegt wird.
+\end{frame}
+
 \end{document}
