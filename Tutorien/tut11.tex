@@ -32,4 +32,17 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Paralleler Primzahltest mit Futures}
+  Gegeben ist Java-Code, der sequenziell einfache Primzahltests durchführt und die Anzahl gefundener Primzahlen bestimmt.
+  Zur Reduktion der Laufzeit und zur Auslastung von Mehrkernsystemen soll er parallelisiert werden,
+  indem jeder Thread einen Teil des Intervalls autonom prüft und die Anzahl gefundener Primzahlen zurückgibt.
+  Dabei soll das Future-Konzept verwendet werden.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{DivisionSeq}}
+  \lstinputlisting[linerange={3-3,5-5,7-12,14-19,21-25}]{tut11/primes/DivisionSeq.java}
+\end{frame}
+
 \end{document}
