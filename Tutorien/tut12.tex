@@ -55,4 +55,91 @@
   Als Abbruchbedingung des Programms kann ein einfacher Timeout dienen.
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Einkaufen}
+  Der folgende Code beschreibt ein einfaches Einkaufsszenario.
+  Güter (\lstinline{Good}s) werden aus einer Ladentheke (\lstinline{Counter})
+  von Personen (\lstinline{Person}s) in einen Einkaufswagen (\lstinline{Cart}) gelegt.
+  Die zugehörige Methode \lstinline{put} ist mit einem Vertrag versehen,
+  der Vor- und Nachbedingungen als Java-Ausdrücke angibt;
+  dabei bezieht sich \lstinline{\old(AUSDRUCK)}
+  auf den Wert von \lstinline{AUSDRUCK} zu Beginn des Aufrufs.
+  
+  Wo und durch wen wird der Vertrag verletzt?
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{Good}, \lstinline{Counter}}
+  \begin{lstlisting}
+    public interface Good {}
+    
+    public interface Counter {
+        /**
+         * Gibt ein Gut aus der Theke zurueck.
+         * Gibt null zurueck, falls sie leer ist.
+         */
+        public Good takeSomeGood();
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{Cart}}
+  \begin{lstlisting}
+    public class Cart {
+        private Set<Good> goods = new HashSet<Good>();
+        /**
+         * Vorbedingungen:
+         * good != null
+         * 
+         * Nachbedingungen:
+         * goods.containsAll(\old(goods))
+         * goods.contains(good)
+         * goods.size() == \old(goods).size() + 1
+         */
+        public void put(Good good) {
+            goods.add(good);
+        }
+        public Collection<Good> getGoods() {
+            return goods;
+        }
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{Person}}
+  \begin{lstlisting}
+    public class Person {
+        public void shop(Counter counter) {
+            Cart cart = new Cart();
+            for (int i = 0;
+                 i < new Random().nextInt(20);
+                 i++) {
+                cart.put(counter.takeSomeGood());
+            }
+        }
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Vertragsverletzung\onslide<2->{en}}
+  \begin{itemize}
+  \item
+    \lstinline{Person} verletzt den Vertrag.
+    \lstinline{Counter.takeSomeGood()} kann \lstinline{null} zurückgeben,
+    der Vertrag von \lstinline{Cart.put} verlangt allerdings \lstinline{good != null}.
+    \lstinline{Person} muss prüfen, ob das von der Theke genommene Gut auch existiert.
+    \pause
+  \item
+    \lstinline{Cart} verletzt den Vertrag.
+    Die \lstinline{goods} sind ein \lstinline{Set};
+    wird ein \lstinline{Good} zweimal hinzugefügt,
+    so bleibt \lstinline{goods} mit dem zweiten Aufruf unverändert,
+    und die Größe bleibt gleich,
+    was die Nachbedingung \lstinline{goods.size() == \old(goods).size() + 1} verletzt.
+  \end{itemize}
+\end{frame}
+
 \end{document}
