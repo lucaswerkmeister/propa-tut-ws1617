@@ -142,4 +142,73 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Personalverwaltung}
+  Es soll eine Software zur Personalverwaltung eines Unternehmens entwickelt werden.
+  Bereits vorgegeben ist eine \lstinline{Employee}-Klasse
+  mit den Methoden \lstinline{hire()}, \lstinline{fire()} und \lstinline{isEmployed()}.
+  Nun soll folgendes Interface implementiert werden:
+  \lstinputlisting[linerange={3-7}]{tut12/company/Company.java}
+  Anforderungen:
+  \begin{itemize}
+  \item
+    Ein Mitarbeiter darf nur bei einer Firma angestellt sein.
+  \item
+    Es darf nur versucht werden, einen Mitarbeiter einzustellen, wenn er noch nicht angestellt ist.
+  \item
+    Es darf nur versucht werden, einen Mitarbeiter zu feuern, wenn er angestellt ist.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{hire}-Vertrag}
+  Schreibe Vertrag für \lstinline{hire}
+  (Java-Ausdrücke, \lstinline{\old(AUSDRUCK)} für \lstinline{AUSDRUCK} zu Beginn der Methode).
+  \begin{itemize}
+  \item Vorbedingungen:\pause
+    \begin{lstlisting}
+      employee != null
+      !getEmployees().contains(employee)
+      !employee.isEmployed()
+    \end{lstlisting}
+  \item Nachbedingungen:\pause
+    \begin{lstlisting}
+      employee.isEmployed()
+      getEmployees().size == \old(getEmployees()).size() + 1
+      getEmployees().containsAll(\old(getEmployees()))
+      getEmployees().contains(employee)
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline{fire}-Vertrag}
+  Schreibe Vertrag für \lstinline{fire}
+  (Java-Ausdrücke, \lstinline{\old(AUSDRUCK)} für \lstinline{AUSDRUCK} zu Beginn der Methode).
+  \begin{itemize}
+  \item Vorbedingungen:\pause
+    \begin{lstlisting}
+      employee != null
+      getEmployees().contains(employee)
+      employee.isEmployed()
+    \end{lstlisting}
+  \item Nachbedingungen:\pause
+    \begin{lstlisting}
+      !employee.isEmployed()
+      getEmployees().size == \old(getEmployees()).size() - 1
+      \old(getEmployees()).containsAll(getEmployees())
+      !getEmployees().contains(employee)
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Implementierung}
+  Implementiere das \lstinline{Company}-Interface
+  und stelle dabei den Vertrag mit \lstinline{assert}-Statements sicher.
+  
+  Was sind Vorteile und Nachteile der Vertragsbeschreibung mit \lstinline{assert}s
+  gegenüber Sprachen wie Object Constraint Language (OCL) oder Java Modeling Language (JML)?
+\end{frame}
+
 \end{document}
