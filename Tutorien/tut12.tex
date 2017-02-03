@@ -29,4 +29,30 @@
   \lstinputlisting[linerange={5-20}]{tut12/simpsons/src/solution/java/de/lucaswerkmeister/simpsons/Kid.java}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Speisende Philosophen}
+  Fünf Philosophen sitzen um einen Tisch herum,
+  jeder mit einem Teller.
+  Zwischen zwei Tellern liegt jeweils eine Gabel.
+  Jeder Philosoph ist stets entweder mit Denken oder mit Essen beschäftigt.
+  Zum Essen benötigt er zwei Gabeln, die links und rechts von ihm liegen.
+  Zum Denken legt er diese wieder zurück.
+  
+  Was ist der Vorteil des Aktor-Konzepts gegenüber Threads,
+  insbesondere für dieses Problem?
+  
+  \pause
+  Eine Thread-Implementierung dieses Problems ist anfällig für Deadlocks,
+  die mit Aktoren nicht auftreten können.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Speisende Philosophen in Akka}
+  Implementiere das Problem mit Akka Aktoren in Java.
+  Erstelle Aktoren für den Tisch und die Philosophen
+  und implementiere geeignete Kommunikation.
+  Essen und Denken besteht darin, ein zufälliges Zeitintervall zu warten (\lstinline{Thread.sleep()}).
+  Als Abbruchbedingung des Programms kann ein einfacher Timeout dienen.
+\end{frame}
+
 \end{document}
