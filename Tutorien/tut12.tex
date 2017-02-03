@@ -29,6 +29,23 @@
   \lstinputlisting[linerange={5-20}]{tut12/simpsons/src/solution/java/de/lucaswerkmeister/simpsons/Kid.java}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Ping Pong}
+  Implementiere einen Aktor \lstinline{PingPong},
+  der mit einem Aktor und einem Namen initialisiert wird
+  und auf \lstinline{Integer}-Nachrichten reagiert,
+  indem er \lstinline{"<name> received <wert>"} ausgibt
+  und dann den empfangenen Wert um 1 erhöht
+  und an den im Konstruktor übergebenen Aktor weiterleitet.
+  (Ist kein Aktor gesetzt,
+  so soll an den Absender der empfangenen Nachricht zurückgeschickt werden.)
+  
+  Signatur des Konstruktors:
+  \begin{lstlisting}
+    PingPong(ActorRef sendTo, String name)
+  \end{lstlisting}
+\end{frame}
+
 \begin{frame}
   \frametitle{Speisende Philosophen}
   Fünf Philosophen sitzen um einen Tisch herum,
