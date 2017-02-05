@@ -127,3 +127,18 @@
 
 \sisetup{output-decimal-marker={,}}
 
+\let\gsp=\empty
+\makeatletter
+\newenvironment{grammar}{
+  \let\gsp=\enspace
+  \start@align\@ne\st@rredtrue\m@ne
+}{
+  \endalign
+}
+\makeatother
+\newcommand{\terminal}[1]{\underline{\textbf{\texttt{#1}}}\gsp}
+\newcommand{\nonterminal}[1]{\mathit{#1}\gsp}
+\newcommand{\gor}[0]{|\gsp}
+\newcommand{\First}[1]{\ensuremath{\textrm{First}_{#1}}}
+\newcommand{\Follow}[1]{\ensuremath{\textrm{Follow}_{#1}}}
+
