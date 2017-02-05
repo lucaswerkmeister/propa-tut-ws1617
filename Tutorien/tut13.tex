@@ -136,4 +136,47 @@ then:                         istore_1
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Bytecode-Erzeugung mit Haskell}
+  \lstset{language=Haskell}
+  Datentyp für arithmetische Ausdrücke in Baumdarstellung (AST):
+  \begin{lstlisting}
+    data Exp = Const Int | Var Int | Neg Exp | Add Exp Exp
+  \end{lstlisting}
+  Definiere Funktion \lstinline{codegen :: Exp -> [String]}, die Java-Bytecode für den Ausdrucksbaum erzeugt. Beispiel:
+  \begin{lstlisting}
+    codegen (Neg (Const 42)) = ["iconst 42", "ineg"]
+  \end{lstlisting}
+  Um minimalen Stackverbrauch zu gewährleisten, soll bei Knoten mit mehreren Unterbäumen der Code für den höchsten Baum zuerst generiert werden;
+  dazu ist \lstinline{height :: Exp -> Int} vorgegeben.
+  (\lstinline{Int -> String} macht die Funktion \lstinline{show}.)
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Bytecode-Erzeugung mit Haskell}
+  \lstset{language=Haskell}
+  \begin{lstlisting}
+    codegen (Const value) = [ "ldc " ++ (show value) ]
+    codegen (Var index)   = [ "iload " ++ (show index) ]
+    codegen (Neg expr)    = codegen expr ++ [ "ineg" ]
+    codegen (Add e1 e2)
+      | height e1 >= height e2  = codegen e1 ++
+                                  codegen e2 ++
+                                  [ "iadd" ]
+      | otherwise               = codegen e2 ++
+                                  codegen e1 ++
+                                  [ "iadd" ]
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bytecode-Erzeugung mit Haskell}
+  Anmerkung zum Aufgabentitel:
+  in der Klausur kommen gerne Aufgaben dran, die mehrere Themen kombinieren:
+  hier Haskell (funktionale Programmierung) und Bytecode (Compiler).
+  Oft dient eines der Themen aber nur zur „Motivation“ / „Aufgabenstellung“,
+  und die Aufgabe dreht sich hauptsächlich um das andere Thema.
+  Daher: nicht eine Aufgabe nur nach dem Titel als „kann ich nicht“ überspringen!
+\end{frame}
+
 \end{document}
