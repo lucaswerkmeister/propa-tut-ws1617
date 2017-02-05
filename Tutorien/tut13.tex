@@ -14,4 +14,24 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{First-/Follow-Mengen}
+  Betrachte folgende Grammatik (Terminale unterstrichen):
+  \begin{grammar}
+    \nonterminal{S} &→ \nonterminal{L} \terminal{=} \nonterminal{R} \gor \nonterminal{R} \\
+    \nonterminal{L} &→ \terminal{*} \nonterminal{R} \gor \terminal{id} \\
+    \nonterminal{R} &→ \nonterminal{L}
+  \end{grammar}
+  Bestimme Mengen \First1 und \Follow1 für alle Nichtterminale.
+  Für alle Terminale in den \Follow1-Mengen soll Folge von Ableitungsschritten angegeben werden,
+  die belegt, dass das Terminal Teil der \Follow1-Menge ist.
+  \pause
+  \begin{align*}
+    \First1(\nonterminal{L}) &= \{\terminal{*}, \terminal{id}\} & \Follow1(\nonterminal{L}) &= \{\terminal{\#}, \terminal{=}\} \\
+    \First1(\nonterminal{R}) &= \First1(\nonterminal{L}) = \{\terminal{*}, \terminal{id}\} & \Follow1(\nonterminal{R}) &= \{\terminal{\#}, \terminal{=}\} \\
+    \First1(\nonterminal{S}) &= \First1(\nonterminal{L}) \cup \First1(\nonterminal{R}) & \quad \Follow1(\nonterminal{S}) &= \{\terminal{\#}\} \\
+    &= \{\terminal{*}, \terminal{id}\}
+  \end{align*}
+\end{frame}
+
 \end{document}
