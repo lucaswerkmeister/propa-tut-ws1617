@@ -8,7 +8,7 @@
 \normalsize
 \normalem
 
-\lstset{language=Java}
+\lstset{language=jasmin}
 
 \begin{frame}[plain]
   \titlepage
@@ -32,6 +32,108 @@
     \First1(\nonterminal{S}) &= \First1(\nonterminal{L}) \cup \First1(\nonterminal{R}) & \quad \Follow1(\nonterminal{S}) &= \{\terminal{\#}\} \\
     &= \{\terminal{*}, \terminal{id}\}
   \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Java Bytecode: Stack}
+  Die \textit{Java Virtual Machine} ist eine \emph{Stack-Maschine};
+  viele Befehle, insbesondere alle arithmetischen Operationen,
+  nehmen Operanden vom Stack und schreiben sie wieder dorthin.
+  
+  Außerdem haben diese Befehle ein typspezifisches Präfix:
+  \lstinline{iadd} addiert zwei \lstinline[language=Java]{int}s,
+  \lstinline{fmul} multipliziert zwei \lstinline[language=Java]{float}s,
+  usw.
+  
+  Wenn also auf dem Stack bereits die \lstinline[language=Java]{int}-Werte \lstinline{3}, \lstinline{2} und \lstinline{1} liegen,
+  liegt nach dem Ausführen der Befehle \lstinline{iadd}, \lstinline{imul} am Ende der Wert \lstinline{9} auf dem Stack.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Java Bytecode: Frames}
+  Zu jeder Methode gehört ein \textit{Frame}:
+  der Bereich, in dem alle lokalen Variablen der Methode stehen,
+  darunter alle ihre Parameter und, wenn die Methode nicht statisch ist, der \lstinline[language=Java]{this}-Pointer.
+  Der Austausch zwischen Frame und Stack geschieht über zwei Befehle
+  (jeweils in einer Variante pro Typ):
+  \textbf{\texttt{\_load X}} lädt die $X$. lokale Variable auf den Stack,
+  \textbf{\texttt{\_store X}} nimmt einen Wert vom Stack und schreibt ihn in die $X$. lokale Variable.
+  
+  Weil die lokalen Variablen mit den niedrigsten Indizes am häufigsten verwendet werden,
+  haben sie eigene Befehle:
+  \lstinline{iload\_1} ist gleichbedeutend zu \lstinline{iload 1},
+  aber im Bytecode ein Byte kürzer.
+  Außerdem gibt es Befehle,
+  um häufig verwendete Konstanten zu laden,
+  etwa \lstinline{iconst\_0} und \lstinline{aconst\_null}
+  (\lstinline{a} steht für den Referenz-Typ).
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Codeerzeugung}
+  Gegeben sei folgender Ausdruck (in gewohnter Präzedenz): \lstinline{a * (b - 1) + c}.
+  Geben Sie ihn in umgekehrter polnischer Notation (\emph{Reverse Polish Notation}, \emph{RPN}) an.
+  \pause
+  \begin{lstlisting}
+    a b 1 - * c +
+  \end{lstlisting}
+  \pause
+  Geben Sie Java-Bytecode an, der den Ausdruck berechnet.
+  Die \lstinline[language=Java]{int}-Variablen \lstinline{a}, \lstinline{b} und \lstinline{c} seien als lokale Variablen 1, 2 und 3 verfügbar.
+  \pause
+  \begin{lstlisting}
+    iload_1
+    iload_2
+    iconst_1
+    isub
+    imul
+    iload_3
+    iadd
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Java Bytecode: Konstantenpool, Aufrufe, Tests}
+  Jede Klasse hat einen Konstantenpool, der verschiedene Konstanten hält:
+  Zahlen, Strings, Referenzen auf Felder und Methoden.
+  Der Befehl \lstinline{ldc X} lädt die Konstante \texttt{X} aus dem Konstantenpool auf den Stack.
+  
+  Ein normaler Methodenaufruf wird mit dem Befehl \lstinline{invokevirtual X} ausgeführt.
+  Dabei sollten das Zielobjekt und die Argumente auf dem Stack liegen,
+  und \texttt{X} ist die Stelle im Konstantenpool,
+  an der die Referenz auf die aufzurufende Methode steht.
+  
+  Für bedingte Sprünge gibt es die \textbf{\texttt{if\_\_ X}}-Befehle,
+  die Operanden auf dem Stack vergleichen und gegebenenfalls an Stelle \texttt{X} springen
+  (Beispiel: \lstinline{if_icmpgt}, \lstinline{if_icmpeq}, …).
+  \lstinline{goto X} führt einen unbedingten Sprung aus.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Codeerzeugung}
+  Übersetze folgendes Java-Programm in Java-Bytecode.
+  \begin{lstlisting}[language=Java]
+    if ((a > c) || (c > 0))
+        a = a - this.f(a * (b - 1) + c);
+  \end{lstlisting}
+  Die Referenz \lstinline[language=Java]{this} und die \lstinline[language=Java]{int}s \lstinline{a}, \lstinline{b} und \lstinline{c} stehen in lokalen Variablen 0, 1, 2, 3;
+  die Methode \lstinline{f} steht im Konstantenpool an Stelle 2.
+  \pause
+  \begin{lstlisting}[language=jasmin,autogobble=false]
+    iload_1                   iload_1           
+    iload_3                   iload_2           
+    if_icmpgt then            iconst_1          
+    goto no_shortcut          isub              
+no_shortcut:                  imul              
+    iload_3                   iload_3           
+    iconst_0                  iadd              
+    if_icmpgt then            invokevirtual #2  
+    goto else                 isub              
+then:                         istore_1          
+    iload_1                   goto finish       
+    aload_0               else:                 
+                          finish:
+  \end{lstlisting}
 \end{frame}
 
 \end{document}
