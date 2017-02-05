@@ -35,6 +35,25 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Einfaches JSON parsen}
+  Grammatik einer einfachen Variante von \emph{JavaScript Object Notation}:
+  \begin{grammar}
+    \nonterminal{Value} &→ \terminal{string} \gor \terminal{number} \gor \nonterminal{Object} \\
+    \nonterminal{Object} &→ \terminal{\{} \nonterminal{Members} \terminal{\}} \\
+    \nonterminal{Members} &→ \nonterminal{Pair} \nonterminal{Members'} \\
+    \nonterminal{Members'} &→ \terminal{,} \nonterminal{Members} \gor ε \\
+    \nonterminal{Pair} &→ \terminal{string} \terminal{:} \nonterminal{Value}
+  \end{grammar}
+  Verfügbare…
+  \begin{description}
+  \item[Prozeduren] \lstinline{nextToken()}, \lstinline{error()}, \lstinline{token.getType()}, \lstinline{token.getSymbol()}
+  \item[Tokentypen] \lstinline{STRING}, \lstinline{NUMBER}, \lstinline{LCURLY}, \lstinline{RCURLY}, \lstinline{COMMA}, \lstinline{COLON}
+  \item[Klassen] \lstinline{Pair}, \lstinline{JSONValue}, \lstinline{JSONString}, \lstinline{JSONNumber}, \lstinline{JSONObject}
+  \end{description}
+  Implementiere \lstinline{JSONSimpleParser.parseValue()} und Hilfsmethoden.
+\end{frame}
+
+\begin{frame}
   \frametitle{Java Bytecode: Stack}
   Die \textit{Java Virtual Machine} ist eine \emph{Stack-Maschine};
   viele Befehle, insbesondere alle arithmetischen Operationen,
