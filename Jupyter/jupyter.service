@@ -2,7 +2,7 @@
 Description=Jupyter / IHaskell system
 
 [Service]
-ExecStart=/usr/bin/jupyter notebook --no-browser --no-mathjax --notebook-dir=/notebooks/ --ip=*
+ExecStart=/usr/bin/jupyter notebook --no-browser --no-mathjax --notebook-dir=/notebooks/ --ip=* --NotebookApp.token=
 User=jupyter-run
 Environment=PATH=/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/home/jupyter/.stack/programs/x86_64-linux/ghc-7.10.3/bin
 PrivateTmp=yes
